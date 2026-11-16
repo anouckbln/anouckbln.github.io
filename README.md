@@ -44,15 +44,17 @@ Conseil : garde des images de moins de 500 Ko (1600 px de large suffisent) pour 
 
 1. Copie une section entière, de `<section class="theme" id="…">` jusqu'à `</section>`.
 2. Donne-lui un nouvel `id`, court et sans accents, par exemple `id="participer"`.
-3. Ajoute la ligne correspondante dans le sommaire du bandeau bleu :
+3. Ajoute l'onglet correspondant dans la barre d'onglets (bloc `<nav class="onglets">`), en reprenant le même id précédé de `#` :
 
 ```html
-<li><a href="#participer">Faire participer les habitant·es</a></li>
+<a href="#participer">Faire participer les habitant·es</a>
 ```
 
-## Changer les couleurs ou la police
+L'onglet affiché à l'arrivée sur le site est la première section de la page. Pour en changer, déplace la section voulue en premier.
 
-Ouvre `style.css` : tout se règle dans les premières lignes (`--bleu`, `--texte`…). Par exemple, remplace `#0a27a8` par un autre code couleur.
+## Changer les couleurs, la police ou les marges
+
+Ouvre `style.css` : tout se règle dans les premières lignes (`--bleu`, `--texte`, `--largeur`…). Par exemple, remplace `#0a27a8` par un autre code couleur. Les marges sur les côtés se règlent dans le bloc `.conteneur`, et la largeur minimale des blocs projets dans le bloc `.projets` (`360px`).
 
 ## Si quelque chose ne s'affiche plus
 

@@ -11,7 +11,7 @@
   --ligne: #d9deef;       /* traits de séparation */
   --fond: #ffffff;        /* fond des sections */
   --police: "Open Sans", Arial, sans-serif;
-  --largeur: 2000px;      /* largeur maximale du contenu */
+  --largeur: 1600px;      /* largeur maximale du contenu */
 }
 
 /* ---------- Bases ---------- */
@@ -35,73 +35,108 @@ img { max-width: 100%; height: auto; display: block; }
 .conteneur {
   max-width: var(--largeur);
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 0 clamp(16px, 3vw, 40px);   /* marges sur les côtés */
 }
 
 /* ---------- Bandeau bleu d'accueil ---------- */
 .accueil {
   background: var(--bleu);
   color: #fff;
-  padding: 72px 0 64px;
+  padding: 40px 0 36px;
 }
 
 .accueil h1 {
-  font-size: clamp(32px, 5vw, 52px);
+  font-size: clamp(24px, 3vw, 34px);
   font-weight: 800;
   font-style: italic;
-  margin: 0 0 20px;
+  margin: 0 0 14px;
   line-height: 1.1;
 }
 
 .accueil .presentation {
   max-width: 760px;
-  font-size: 18px;
-  margin: 0 0 40px;
-}
-
-.accueil nav ul {
-  list-style: none;
+  font-size: 17px;
   margin: 0;
-  padding: 0;
 }
-
-.accueil nav a {
-  color: #fff;
-  text-decoration: none;
-  font-size: clamp(20px, 2.6vw, 26px);
-  font-weight: 800;
-  font-style: italic;
-  line-height: 1.5;
-}
-
-.accueil nav a:hover { text-decoration: underline; }
 
 .contact {
-  margin-top: 40px;
+  margin: 16px 0 0;
   font-size: 15px;
 }
 
 .contact a { color: #fff; }
 
-/* ---------- Sections thématiques ---------- */
-.theme {
-  padding: 64px 0;
+/* ---------- Onglets ---------- */
+/* La barre reste visible en haut de l'écran quand on descend */
+.onglets {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--fond);
   border-bottom: 1px solid var(--ligne);
+}
+
+.onglets .conteneur {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 24px;
+}
+
+.onglets a {
+  padding: 14px 0 11px;
+  color: var(--gris);
+  text-decoration: none;
+  font-weight: 800;
+  font-style: italic;
+  font-size: 14px;
+  border-bottom: 3px solid transparent;
+}
+
+.onglets a:hover { color: var(--bleu); }
+
+.onglets a.actif {
+  color: var(--bleu);
+  border-bottom-color: var(--bleu);
+}
+
+/* Sur téléphone : les onglets défilent sur une seule ligne */
+@media (max-width: 700px) {
+  .onglets .conteneur {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  .onglets a { white-space: nowrap; }
+}
+
+/* ---------- Sections thématiques ---------- */
+/* Une seule section est visible : celle de l'onglet choisi.
+   À l'arrivée sur le site, c'est la première. */
+.theme {
+  display: none;
+  padding: 40px 0 64px;
+  scroll-margin-top: 100px;
+}
+
+.theme:target,
+main:not(:has(.theme:target)) .theme:first-of-type {
+  display: block;
 }
 
 .theme h2 {
   color: var(--bleu);
-  font-size: clamp(26px, 3.6vw, 36px);
+  font-size: clamp(22px, 2.6vw, 28px);
   font-weight: 800;
   font-style: italic;
-  margin: 0 0 32px;
+  margin: 0 0 28px;
+  line-height: 1.2;
 }
 
 /* Grille de projets : les cartes se placent toutes seules,
-   3 par ligne sur ordinateur, 1 par ligne sur téléphone */
+   3 par ligne sur ordinateur, 1 par ligne sur téléphone.
+   360px = largeur minimale d'un bloc projet */
 .projets {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
   gap: 40px 32px;
 }
 
@@ -147,7 +182,8 @@ img { max-width: 100%; height: auto; display: block; }
 
 /* ---------- Pied de page ---------- */
 footer {
-  padding: 40px 0 56px;
+  border-top: 1px solid var(--ligne);
+  padding: 32px 0 48px;
   color: var(--gris);
   font-size: 14px;
 }

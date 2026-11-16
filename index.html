@@ -24,26 +24,32 @@
     <h1>Portfolio - Anouck Blouin</h1>
 
     <p class="presentation">
-      <!-- Ingénieure en génie civil (EPFL) spécialisée dans la transformation urbaine et l'adaptation climatique.
+      Ingénieure en génie civil (EPFL) spécialisée dans la transformation urbaine et l'adaptation climatique.
       Je combine aménagement durable, diagnostic territorial et co-design pour concevoir des villes résilientes.
-      Mes projets articulent infrastructure bleue/verte, mobilité douce et justice socio-spatiale. -->
+      Mes projets articulent infrastructure bleue/verte, mobilité douce et justice socio-spatiale.
     </p>
-
-    <!-- Sommaire : chaque lien renvoie vers une section grâce à son id (#observer, #mesurer…) -->
-    <nav>
-      <ul>
-        <li><a href="#observer">Observer et diagnostiquer le territoire</a></li>
-        <li><a href="#mesurer">Mesurer pour accompagner la transition</a></li>
-        <li><a href="#usages">Comprendre les usages</a></li>
-        <li><a href="#formes">Identifier des formes urbaines</a></li>
-        <li><a href="#amenager">Aménager durablement le territoire</a></li>
-        <li><a href="#futur">Imaginer le futur</a></li>
-      </ul>
-    </nav>
 
     <p class="contact">Contact : <a href="mailto:anouck.blouin@yahoo.fr">anouck.blouin@yahoo.fr</a></p>
   </div>
 </header>
+
+
+<!-- =========================================================
+     ONGLETS
+     Chaque onglet ouvre la section qui a le même id
+     (href="#observer" ouvre <section id="observer">).
+     Le premier onglet est celui affiché à l'arrivée sur le site.
+     ========================================================= -->
+<nav class="onglets">
+  <div class="conteneur">
+    <a href="#observer">Observer et diagnostiquer le territoire</a>
+    <a href="#mesurer">Mesurer pour accompagner la transition</a>
+    <a href="#usages">Comprendre les usages</a>
+    <a href="#formes">Identifier des formes urbaines</a>
+    <a href="#amenager">Aménager durablement le territoire</a>
+    <a href="#futur">Imaginer le futur</a>
+  </div>
+</nav>
 
 
 <main>
@@ -165,26 +171,6 @@
         </div>
       </article>
 
-  <div class="conteneur">
-    <h2>Identifier des formes urbaines</h2>
-    <div class="projets">
-
-      <!-- PROJET : Sustainability of urban forms -->
-      <article class="projet">
-        <h3>Sustainability of urban forms, a spatiotemporal analysis 2000-2015</h3>
-        <p class="cadre">CIRED · Article en cours de publication</p>
-        <p>
-          Comment les villes du monde ont-elles évolué entre 2000 et 2015 ? À partir de données satellitaires
-          sur plus de 9 000 villes, cette étude mesure trois indicateurs : la surface bâtie par habitant,
-          la densité résidentielle et l'accès à la végétation. Seules 7,5 % des villes ont progressé
-          sur les trois à la fois.
-        </p>
-        <p><a class="lien" href="https://anouckbln.github.io/projet-de-master-ablouin/" target="_blank">Voir le projet →</a></p>
-        <div class="images">
-          <a href="images/formes-urbaines-monde.jpg" target="_blank"><img src="images/formes-urbaines-monde.jpg" alt="Planisphère des villes ayant progressé sur les trois indicateurs entre 2000 et 2015"></a>
-        </div>
-      </article>
-
     </div>
   </div>
 </section>
@@ -241,7 +227,30 @@
 <!-- =========================================================
      SECTION 4 : IDENTIFIER DES FORMES URBAINES
      ========================================================= -->
+<section class="theme" id="formes">
+  <div class="conteneur">
+    <h2>Identifier des formes urbaines</h2>
+    <div class="projets">
 
+      <!-- PROJET : Sustainability of urban forms -->
+      <article class="projet">
+        <h3>Sustainability of urban forms, a spatiotemporal analysis 2000-2015</h3>
+        <p class="cadre">CIRED · Article en cours de publication</p>
+        <p>
+          Comment les villes du monde ont-elles évolué entre 2000 et 2015 ? À partir de données satellitaires
+          sur plus de 9 000 villes, cette étude mesure trois indicateurs : la surface bâtie par habitant,
+          la densité résidentielle et l'accès à la végétation. Seules 7,5 % des villes ont progressé
+          sur les trois à la fois.
+        </p>
+        <p><a class="lien" href="https://anouckbln.github.io/projet-de-master-ablouin/" target="_blank">Voir le projet →</a></p>
+        <div class="images">
+          <a href="images/formes-urbaines-monde.jpg" target="_blank"><img src="images/formes-urbaines-monde.jpg" alt="Planisphère des villes ayant progressé sur les trois indicateurs entre 2000 et 2015"></a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
 
 
 <!-- =========================================================
@@ -330,6 +339,20 @@
     Anouck Blouin · <a href="mailto:anouck.blouin@yahoo.fr">anouck.blouin@yahoo.fr</a>
   </div>
 </footer>
+
+
+<!-- Petit script qui souligne l'onglet ouvert (pas besoin d'y toucher) -->
+<script>
+  function marquerOnglet() {
+    var liens = document.querySelectorAll('.onglets a');
+    var actif = location.hash || liens[0].getAttribute('href');
+    liens.forEach(function (lien) {
+      lien.classList.toggle('actif', lien.getAttribute('href') === actif);
+    });
+  }
+  window.addEventListener('hashchange', marquerOnglet);
+  marquerOnglet();
+</script>
 
 </body>
 </html>
