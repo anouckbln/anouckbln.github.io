@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anouck Blouin · Portfolio</title>
+  <meta name="description" content="Portfolio d'Anouck Blouin, ingénieure en génie civil (EPFL) : transformation urbaine, adaptation climatique, mobilité douce et justice socio-spatiale.">
+
+  <!-- Police Open Sans (Google Fonts) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,800&display=swap">
+
+  <!-- Mise en forme du site -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- =========================================================
+     BANDEAU BLEU D'ACCUEIL
+     ========================================================= -->
+<header class="accueil">
+  <div class="conteneur">
+    <h1>Portfolio - Anouck Blouin</h1>
+
+    <p class="presentation">
+      Ingénieure en génie civil (EPFL) spécialisée dans la transformation urbaine et l'adaptation climatique.
+      Je combine aménagement durable, diagnostic territorial et co-design pour concevoir des villes résilientes.
+      Mes projets articulent infrastructure bleue/verte, mobilité douce et justice socio-spatiale.
+    </p>
+
+    <!-- Sommaire : chaque lien renvoie vers une section grâce à son id (#observer, #mesurer…) -->
+    <nav>
+      <ul>
+        <li><a href="#observer">Observer et diagnostiquer le territoire</a></li>
+        <li><a href="#mesurer">Mesurer pour accompagner la transition</a></li>
+        <li><a href="#usages">Comprendre les usages</a></li>
+        <li><a href="#formes">Identifier des formes urbaines</a></li>
+        <li><a href="#amenager">Aménager durablement le territoire</a></li>
+        <li><a href="#futur">Imaginer le futur</a></li>
+      </ul>
+    </nav>
+
+    <p class="contact">Contact : <a href="mailto:anouck.blouin@yahoo.fr">anouck.blouin@yahoo.fr</a></p>
+  </div>
+</header>
+
+
+<main>
+
+<!--
+  =========================================================
+  MODÈLE D'UN PROJET : copie ce bloc pour ajouter un projet,
+  colle-le à l'intérieur d'un <div class="projets">, puis
+  remplace les textes et le nom de l'image.
+
+  <article class="projet">
+    <h3>Titre du projet</h3>
+    <p class="cadre">Cadre (EPFL, Action Située…)</p>
+    <p>Description du projet.</p>
+    <div class="images">
+      <a href="images/mon-image.jpg" target="_blank"><img src="images/mon-image.jpg" alt="Ce que montre l'image"></a>
+    </div>
+  </article>
+
+  - Pas d'image ? Supprime tout le bloc <div class="images"> … </div>.
+  - Plusieurs images ? Répète la ligne <a …><img …></a>.
+  - Un lien ? Ajoute : <p><a class="lien" href="https://…" target="_blank">Voir le projet →</a></p>
+  =========================================================
+-->
+
+
+<!-- =========================================================
+     SECTION 1 : OBSERVER ET DIAGNOSTIQUER LE TERRITOIRE
+     ========================================================= -->
+<section class="theme" id="observer">
+  <div class="conteneur">
+    <h2>Observer et diagnostiquer le territoire</h2>
+    <div class="projets">
+
+      <!-- PROJET : Justice spatiale, Ouest lausannois -->
+      <article class="projet">
+        <h3>Justice spatiale et environnementale, Ouest lausannois</h3>
+        <p class="cadre">EPFL</p>
+        <p>
+          Face au phénomène d'îlot de chaleur urbain et aux inégalités socio-spatiales croissantes, cette étude
+          cartographie l'exposition différenciée des populations précaires aux risques climatiques dans l'Ouest lausannois.
+        </p>
+        <p>
+          À l'échelle de la parcelle (1 ha), une analyse statistique met en relation un indice de précarité basé sur
+          le revenu avec la température de surface (données satellitaires) et la présence d'espaces verts (QGIS).
+          Les résultats montrent une corrélation positive entre risque de pauvreté et exposition à des températures
+          plus élevées, et une corrélation négative avec la présence de végétation, posant les bases d'un diagnostic
+          territorial pour prioriser l'implantation d'infrastructures bleues et vertes.
+        </p>
+        <div class="images">
+          <a href="images/ouest-lausannois.jpg" target="_blank"><img src="images/ouest-lausannois.jpg" alt="Carte de l'effet d'îlot de chaleur urbain à l'hectare dans l'Ouest lausannois"></a>
+        </div>
+      </article>
+
+      <!-- PROJET : Diagnostic de marchabilité -->
+      <article class="projet">
+        <h3>Diagnostic de marchabilité, Grand Genève</h3>
+        <p class="cadre">Action Située</p>
+        <p>
+          Basé sur la littérature sur le sujet, développement des composantes de la marche pour qualifier
+          la marchabilité dans le Grand Genève à l'échelle de la rue, de 200 m et du quartier.
+        </p>
+        <div class="images">
+          <a href="images/marchabilite-grand-geneve.jpg" target="_blank"><img src="images/marchabilite-grand-geneve.jpg" alt="Carte de marchabilité du Grand Genève"></a>
+        </div>
+      </article>
+
+      <!-- PROJET : Observatoire Mobilité, Santé, Environnement -->
+      <article class="projet">
+        <h3>Observatoire Mobilité, Santé, Environnement, Grand Genève</h3>
+        <p class="cadre">Action Située</p>
+        <p>
+          Plateforme interactive de visualisation de données croisant mobilité, santé et environnement
+          à l'échelle du Grand Genève.
+        </p>
+        <div class="images">
+          <a href="images/observatoire-1.jpg" target="_blank"><img src="images/observatoire-1.jpg" alt="Capture de la plateforme de l'observatoire, carte du Grand Genève"></a>
+          <a href="images/observatoire-2.jpg" target="_blank"><img src="images/observatoire-2.jpg" alt="Capture de la plateforme de l'observatoire, carte par secteurs"></a>
+          <a href="images/observatoire-3.jpg" target="_blank"><img src="images/observatoire-3.jpg" alt="Capture de la plateforme de l'observatoire, carte thématique"></a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SECTION 2 : MESURER POUR ACCOMPAGNER LA TRANSITION
+     ========================================================= -->
+<section class="theme" id="mesurer">
+  <div class="conteneur">
+    <h2>Mesurer pour accompagner la transition</h2>
+    <div class="projets">
+
+      <!-- PROJET : Indicateurs de suivi -->
+      <article class="projet">
+        <h3>Indicateurs de suivi des politiques environnementales du Grand Genève</h3>
+        <p class="cadre">Action Située</p>
+        <p>
+          Assistance à maîtrise d'ouvrage pour le développement d'un set d'indicateurs de suivi des politiques
+          environnementales dans les domaines de la mobilité, de l'environnement et de l'urbanisme.
+        </p>
+        <div class="images">
+          <a href="images/indicateurs-grand-geneve.jpg" target="_blank"><img src="images/indicateurs-grand-geneve.jpg" alt="Fiches indicateurs de suivi des politiques environnementales"></a>
+        </div>
+      </article>
+
+      <!-- PROJET : Matrice origine-destination -->
+      <article class="projet">
+        <h3>Matrice origine-destination, Grand Genève</h3>
+        <p class="cadre">Action Située</p>
+        <p>
+          Mise à jour du réseau routier et ferroviaire du Grand Genève et redressement statistique
+          de la matrice origine-destination.
+        </p>
+        <div class="images">
+          <a href="images/matrice-od.jpg" target="_blank"><img src="images/matrice-od.jpg" alt="Carte des flux origine-destination autour du lac Léman"></a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SECTION 3 : COMPRENDRE LES USAGES
+     ========================================================= -->
+<section class="theme" id="usages">
+  <div class="conteneur">
+    <h2>Comprendre les usages</h2>
+    <div class="projets">
+
+      <!-- PROJET : Ballon et genre -->
+      <article class="projet">
+        <h3>Ballon et genre dans la ville</h3>
+        <p class="cadre">Enquête de sociologie urbaine, EPFL</p>
+        <p>
+          Enquête sur la place du genre dans l'espace public à travers les terrains de jeux de ballon à Lausanne :
+          observations de terrain sur plusieurs sites et relevé du genre des participant·es.
+        </p>
+        <div class="images">
+          <a href="images/ballon-genre-1.jpg" target="_blank"><img src="images/ballon-genre-1.jpg" alt="Croquis d'observation des joueurs autour d'un terrain"></a>
+          <a href="images/ballon-genre-2.jpg" target="_blank"><img src="images/ballon-genre-2.jpg" alt="Graphique du genre d'identification des participant·es par site"></a>
+        </div>
+      </article>
+
+      <!-- PROJET : Perception de la marche -->
+      <article class="projet">
+        <h3>The influence of urban form on how pedestrians perceive a public space</h3>
+        <p class="cadre">Article en cours de publication</p>
+        <p>
+          Développement d'un sondage comparant l'expérience de la marche à Lausanne et à Philadelphie.
+        </p>
+      </article>
+
+      <!-- PROJET : Enquête modes doux -->
+      <article class="projet">
+        <h3>Enquête d'usage des modes doux</h3>
+        <p class="cadre">EPFL</p>
+        <p>
+          Enquête d'usage d'un axe cyclable et propositions d'aménagements et de stratégie.
+        </p>
+        <div class="images">
+          <a href="images/enquete-modes-doux.jpg" target="_blank"><img src="images/enquete-modes-doux.jpg" alt="Schéma de la méthode de diagnostic : usages, potentiel de mobilité, potentiel d'accueil"></a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SECTION 4 : IDENTIFIER DES FORMES URBAINES
+     ========================================================= -->
+<section class="theme" id="formes">
+  <div class="conteneur">
+    <h2>Identifier des formes urbaines</h2>
+    <div class="projets">
+
+      <!-- PROJET : Sustainability of urban forms -->
+      <article class="projet">
+        <h3>Sustainability of urban forms, a spatiotemporal analysis 2000-2015</h3>
+        <p class="cadre">CIRED · Article en cours de publication</p>
+        <p>
+          Comment les villes du monde ont-elles évolué entre 2000 et 2015 ? À partir de données satellitaires
+          sur plus de 9 000 villes, cette étude mesure trois indicateurs : la surface bâtie par habitant,
+          la densité résidentielle et l'accès à la végétation. Seules 7,5 % des villes ont progressé
+          sur les trois à la fois.
+        </p>
+        <p><a class="lien" href="https://anouckbln.github.io/projet-de-master-ablouin/" target="_blank">Voir le projet →</a></p>
+        <div class="images">
+          <a href="images/formes-urbaines-monde.jpg" target="_blank"><img src="images/formes-urbaines-monde.jpg" alt="Planisphère des villes ayant progressé sur les trois indicateurs entre 2000 et 2015"></a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SECTION 5 : AMÉNAGER DURABLEMENT LE TERRITOIRE
+     ========================================================= -->
+<section class="theme" id="amenager">
+  <div class="conteneur">
+    <h2>Aménager durablement le territoire</h2>
+    <div class="projets">
+
+      <!-- PROJET : Esplanade du Learning Center -->
+      <article class="projet">
+        <h3>Esplanade du Learning Center de l'EPFL</h3>
+        <p class="cadre">Infrastructures bleues et vertes, EPFL</p>
+        <p>
+          Renforcer la résilience de l'esplanade par la gestion des eaux pluviales (rétention et infiltration)
+          et concevoir des espaces favorables au bien-être, au travail et à la détente.
+        </p>
+        <div class="images">
+          <a href="images/esplanade-learning-center.jpg" target="_blank"><img src="images/esplanade-learning-center.jpg" alt="Poster du projet d'aménagement de l'esplanade du Learning Center"></a>
+        </div>
+      </article>
+
+      <!-- PROJET : Campus EPFL et solutions fondées sur la nature -->
+      <article class="projet">
+        <h3>Transforming EPFL campus with nature-based solutions</h3>
+        <p class="cadre">EPFL</p>
+        <p>
+          Design bioclimatique du campus à l'aide de solutions fondées sur la nature. Le confort thermique est
+          évalué par la température moyenne radiante (Tmrt) lors de la journée la plus chaude projetée pour 2060,
+          en comparant une situation non bâtie à l'état actuel du campus.
+        </p>
+        <div class="images">
+          <a href="images/campus-epfl-tmrt.jpg" target="_blank"><img src="images/campus-epfl-tmrt.jpg" alt="Cartes de température moyenne radiante sur le campus EPFL"></a>
+        </div>
+      </article>
+
+      <!-- PROJET : Voie express vélo -->
+      <article class="projet">
+        <h3>Voie express vélo Renens – Hautes écoles</h3>
+        <p class="cadre">Proposition d'aménagement, EPFL</p>
+        <p>
+          Deuxième partie du projet d'enquête : une voie express vélo entre Renens-Gare et Saint-Sulpice via l'EPFL,
+          avec piste bidirectionnelle de 4 m, séparation physique du trafic motorisé, sécurisation des carrefours
+          et onde verte cycliste.
+        </p>
+        <div class="images">
+          <a href="images/voie-express-velo.jpg" target="_blank"><img src="images/voie-express-velo.jpg" alt="Fiche action de la voie express vélo Renens – Hautes écoles"></a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SECTION 6 : IMAGINER LE FUTUR
+     ========================================================= -->
+<section class="theme" id="futur">
+  <div class="conteneur">
+    <h2>Imaginer le futur</h2>
+    <div class="projets">
+
+      <!-- PROJET : Film Le Lignon -->
+      <article class="projet">
+        <h3>Film dystopique, le Lignon</h3>
+        <p class="cadre">Court-métrage</p>
+        <p>
+          Court-métrage d'anticipation imaginant le futur de la cité du Lignon, à Vernier (Genève).
+        </p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+</main>
+
+
+<!-- =========================================================
+     PIED DE PAGE
+     ========================================================= -->
+<footer>
+  <div class="conteneur">
+    Anouck Blouin · <a href="mailto:anouck.blouin@yahoo.fr">anouck.blouin@yahoo.fr</a>
+  </div>
+</footer>
+
+</body>
+</html>
