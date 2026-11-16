@@ -154,14 +154,20 @@ def noms_images(valeur):
 # Construction de la page
 # ---------------------------------------------------------------
 
-def bloc_projet(p):
+def lien_tag(nom, classe, tag_actif):
+    """Une étiquette cliquable qui ouvre la page regroupant les projets de ce tag."""
+    actif = " actif" if tag_actif and identifiant(nom) == identifiant(tag_actif) else ""
+    return f'<a class="{classe}{actif}" href="#tag-{identifiant(nom)}">{texte(nom)}</a>'
+
+
+def bloc_projet(p, tag_actif=None):
     m = [f"        <h3>{texte(p['titre'])}</h3>"]
 
     if p.get("cadre"):
         m.append(f'        <p class="cadre">{texte(p["cadre"])}</p>')
 
-    etiquettes = [f'<span class="tag">{texte(t)}</span>' for t in liste(p.get("themes"))]
-    etiquettes += [f'<span class="tag methode">{texte(t)}</span>' for t in liste(p.get("methodes"))]
+    etiquettes = [lien_tag(t, "tag", tag_actif) for t in liste(p.get("themes"))]
+    etiquettes += [lien_tag(t, "tag methode", tag_actif) for t in liste(p.get("methodes"))]
     if etiquettes:
         m.append(f'        <div class="tags">{"".join(etiquettes)}</div>')
 
@@ -213,6 +219,30 @@ def construire_page(reglages, projets):
         sections.append(f"""<section class="theme" id="{identifiant(c['nom'])}">
   <div class="conteneur">
     <h2>{texte(c.get('titre', c['nom']))}</h2>
+    <div class="projets">
+
+{chr(10).join(blocs)}
+
+    </div>
+  </div>
+</section>""")
+
+    # Une page par tag (thèmes et méthodes) : tous les projets qui le portent,
+    # quel que soit leur onglet. Elle s'ouvre en cliquant sur l'étiquette.
+    tags = {}
+    for p in projets:
+        for t in liste(p.get("themes")) + liste(p.get("methodes")):
+            tags.setdefault(identifiant(t), t)
+    for slug, nom in sorted(tags.items()):
+        concernes = [p for p in projets
+                     if slug in [identifiant(t) for t in liste(p.get("themes")) + liste(p.get("methodes"))]]
+        blocs = [bloc_projet(p, tag_actif=nom) for p in concernes]
+        nombre = f"{len(concernes)} projet" + ("s" if len(concernes) > 1 else "")
+        sections.append(f"""<section class="theme page-tag" id="tag-{slug}">
+  <div class="conteneur">
+    <p class="retour"><a href="#" onclick="history.back(); return false;">← Retour</a></p>
+    <h2>{texte(nom)}</h2>
+    <p class="compte">{nombre}</p>
     <div class="projets">
 
 {chr(10).join(blocs)}

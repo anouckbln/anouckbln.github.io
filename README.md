@@ -27,13 +27,15 @@ Colonnes reconnues (le nom compte, pas l'ordre ; majuscules et accents ignorés)
 | **Entreprise** | Sélection | Ligne grise sous le titre (EPFL, Action Située…) |
 | **Collaboration, propriété intellectuelle** | Texte | Ligne « En collaboration avec … » sous la description |
 | **Description** | Texte | Texte du projet ; une ligne vide = un nouveau paragraphe |
-| **thèmes** | Sélection multiple | Étiquettes saumon |
-| **Tags** | Sélection multiple | Étiquettes à contour bleu (méthodes, outils) |
+| **thèmes** | Sélection multiple | Étiquettes saumon, cliquables |
+| **Tags** | Sélection multiple | Étiquettes à contour bleu (méthodes, outils), cliquables |
 | **Catégorie** | Sélection (ou multiple) | Onglet où le projet apparaît |
 | **Images** | Texte | Noms des fichiers du dossier `images/`, séparés par des virgules |
 | **Lien** | URL | Bouton « Voir le projet » |
 | **Brouillon** | Case à cocher | Cochée : le projet est caché |
 | **Ordre** | Nombre (facultatif) | Ordre d'affichage ; sinon, l'ordre de l'export |
+
+Chaque étiquette (thème ou tag) est cliquable : elle ouvre une page qui regroupe tous les projets portant cette étiquette, quel que soit leur onglet. Ces pages sont créées automatiquement : un nouveau tag ajouté dans Notion a sa page dès la prochaine mise à jour. Pour regrouper deux projets, il suffit donc de leur donner le même tag, écrit de la même façon.
 
 Toute autre colonne est ignorée : tu peux en garder pour toi (dates, notes…).
 
