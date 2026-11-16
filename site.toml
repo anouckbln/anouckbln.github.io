@@ -24,7 +24,7 @@ texte_collaboration = "En collaboration avec"
 # - titre : titre affiché en haut de l'onglet (facultatif, sinon on reprend le nom).
 
 [[categorie]]
-nom = "Observer et diagnostiquer le territoire"
+nom = "Observer et diagnostiquer"
 
 [[categorie]]
 nom = "Mesurer pour accompagner la transition"
@@ -33,7 +33,7 @@ nom = "Mesurer pour accompagner la transition"
 nom = "Comprendre les usages"
 
 [[categorie]]
-nom = "Aménager durablement le territoire"
+nom = "Aménager des espaces publics de qualité"
 
 [[categorie]]
 nom = "Autres projets"
