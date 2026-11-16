@@ -1,0 +1,303 @@
+"""
+Génère le site du portfolio à partir de l'export Notion.
+
+    python build.py
+
+Lit :
+  - site.toml            : présentation, contact, liste des onglets ;
+  - donnees/*.csv        : l'export CSV de la base Notion « Portfolio ».
+Crée le site dans le dossier _site/ (index.html, style.css, images/).
+
+Sur GitHub, ce script est lancé automatiquement à chaque modification :
+il n'y a normalement pas besoin d'y toucher.
+Nécessite Python 3.11 ou plus récent, sans aucune installation.
+"""
+
+import csv
+import html
+import re
+import shutil
+import sys
+import tomllib
+import unicodedata
+from pathlib import Path
+from urllib.parse import unquote
+
+DOSSIER = Path(__file__).parent
+SORTIE = DOSSIER / "_site"
+PREFIXE_COLLAB = "En collaboration avec"
+
+# Colonnes Notion reconnues (sans tenir compte des majuscules ni des accents).
+# Pour renommer une colonne dans Notion, ajoute son nouveau nom ici.
+COLONNES = {
+    "titre":         ["nom", "titre"],
+    "cadre":         ["entreprise", "cadre", "structure"],
+    "collaboration": ["collaboration", "collaboration, propriete intellectuelle"],
+    "description":   ["description"],
+    "methodes":      ["tags", "methodes"],
+    "themes":        ["themes", "theme"],
+    "categorie":     ["categorie", "categories", "onglet"],
+    "images":        ["images", "image"],
+    "lien":          ["lien", "url"],
+    "texte_lien":    ["texte du lien"],
+    "brouillon":     ["brouillon", "masquer"],
+    "ordre":         ["ordre"],
+}
+
+
+# ---------------------------------------------------------------
+# Outils
+# ---------------------------------------------------------------
+
+def simplifier(mot):
+    """Minuscules, sans accents ni espaces superflus : « Thèmes » -> « themes »."""
+    mot = unicodedata.normalize("NFD", mot.strip().lower())
+    return "".join(c for c in mot if unicodedata.category(c) != "Mn")
+
+
+def identifiant(nom):
+    """Nom d'onglet -> id d'ancre : « Comprendre les usages » -> « comprendre-les-usages »."""
+    return re.sub(r"[^a-z0-9]+", "-", simplifier(nom)).strip("-")
+
+
+def liste(valeur):
+    """Les cases à choix multiples de Notion sont exportées en « a, b, c »."""
+    return [v.strip() for v in (valeur or "").split(",") if v.strip()]
+
+
+def texte(valeur):
+    return html.escape(str(valeur).strip())
+
+
+def paragraphes(description):
+    blocs = [b.strip() for b in description.replace("\r", "").split("\n\n") if b.strip()]
+    return "\n".join(f"        <p>{texte(' '.join(b.split()))}</p>" for b in blocs)
+
+
+# ---------------------------------------------------------------
+# Lecture des données
+# ---------------------------------------------------------------
+
+def lire_reglages():
+    try:
+        with open(DOSSIER / "site.toml", "rb") as f:
+            return tomllib.load(f)
+    except tomllib.TOMLDecodeError as erreur:
+        sys.exit(f"Erreur dans site.toml : {erreur}\n"
+                 "Vérifie les guillemets autour de cette ligne.")
+
+
+def trouver_csv():
+    fichiers = sorted((DOSSIER / "donnees").glob("*.csv"))
+    if not fichiers:
+        sys.exit("Aucun fichier CSV dans le dossier donnees/. "
+                 "Exporte ta base Notion en CSV et dépose le fichier dans ce dossier.")
+    # Notion exporte deux fichiers : « …_all.csv » contient toutes les lignes.
+    complets = [f for f in fichiers if f.stem.endswith("_all")]
+    choisi = (complets or fichiers)[0]
+    if len(complets or fichiers) > 1:
+        print(f"Plusieurs CSV trouvés, j'utilise « {choisi.name} ».")
+    return choisi
+
+
+def lire_projets():
+    chemin = trouver_csv()
+    with open(chemin, encoding="utf-8-sig", newline="") as f:
+        lignes = list(csv.DictReader(f))
+    if not lignes:
+        return []
+
+    # Associe chaque colonne du CSV à un champ connu
+    correspondance = {}
+    for colonne in lignes[0].keys():
+        cle = simplifier(colonne or "")
+        for champ, noms in COLONNES.items():
+            if cle in noms or (champ == "collaboration" and cle.startswith("collaboration")):
+                correspondance[champ] = colonne
+
+    if "titre" not in correspondance:
+        sys.exit(f"Colonne « Nom » introuvable dans {chemin.name}.")
+    if "categorie" not in correspondance:
+        print("Attention : pas de colonne « Catégorie » dans Notion, "
+              "tous les projets vont dans le premier onglet.")
+
+    projets = []
+    for position, ligne in enumerate(lignes):
+        p = {champ: (ligne.get(col) or "").strip() for champ, col in correspondance.items()}
+        if not p["titre"]:
+            continue
+        if simplifier(p.get("brouillon", "")) in ("yes", "oui", "true", "x", "1"):
+            continue
+        try:
+            p["_ordre"] = float(p.get("ordre", "").replace(",", "."))
+        except ValueError:
+            p["_ordre"] = float("inf")
+        p["_position"] = position
+        projets.append(p)
+
+    projets.sort(key=lambda p: (p["_ordre"], p["_position"]))
+    print(f"{len(projets)} projets lus dans {chemin.name}.")
+    return projets
+
+
+def noms_images(valeur):
+    """Accepte « a.jpg, b.jpg » ou les chemins d'une colonne Fichiers de Notion."""
+    noms = []
+    for morceau in liste(valeur):
+        nom = unquote(morceau.split("?")[0]).replace("\\", "/").split("/")[-1].strip()
+        if nom:
+            noms.append(nom)
+    return noms
+
+
+# ---------------------------------------------------------------
+# Construction de la page
+# ---------------------------------------------------------------
+
+def bloc_projet(p):
+    m = [f"        <h3>{texte(p['titre'])}</h3>"]
+
+    if p.get("cadre"):
+        m.append(f'        <p class="cadre">{texte(p["cadre"])}</p>')
+
+    etiquettes = [f'<span class="tag">{texte(t)}</span>' for t in liste(p.get("themes"))]
+    etiquettes += [f'<span class="tag methode">{texte(t)}</span>' for t in liste(p.get("methodes"))]
+    if etiquettes:
+        m.append(f'        <div class="tags">{"".join(etiquettes)}</div>')
+
+    if p.get("description"):
+        m.append(paragraphes(p["description"]))
+
+    if p.get("collaboration"):
+        m.append(f'        <p class="collab">{texte(PREFIXE_COLLAB)} {texte(p["collaboration"])}</p>')
+
+    if p.get("lien"):
+        libelle = p.get("texte_lien") or "Voir le projet"
+        m.append(f'        <p><a class="lien" href="{texte(p["lien"])}" target="_blank">{texte(libelle)} →</a></p>')
+
+    images = noms_images(p.get("images"))
+    if images:
+        lignes = []
+        for nom in images:
+            if not (DOSSIER / "images" / nom).exists():
+                print(f"Attention : image « {nom} » introuvable dans images/ (projet « {p['titre']} »).")
+            chemin = "images/" + texte(nom)
+            lignes.append(f'          <a href="{chemin}" target="_blank">'
+                          f'<img src="{chemin}" alt="{texte(p["titre"])}" loading="lazy"></a>')
+        m.append('        <div class="images">\n' + "\n".join(lignes) + "\n        </div>")
+
+    return '      <article class="projet">\n' + "\n".join(m) + "\n      </article>"
+
+
+def construire_page(reglages, projets):
+    global PREFIXE_COLLAB
+    site = reglages["site"]
+    PREFIXE_COLLAB = site.get("texte_collaboration", "En collaboration avec")
+    categories = reglages.get("categorie", [])
+    noms = [c["nom"] for c in categories]
+    premier = noms[0] if noms else ""
+
+    def categories_de(p):
+        cats = liste(p.get("categorie"))
+        for c in cats:
+            if c not in noms:
+                print(f"Attention : la catégorie « {c} » (projet « {p['titre']} ») "
+                      f"n'est pas dans site.toml. Onglets possibles : {', '.join(noms)}.")
+        return cats or [premier]
+
+    onglets = "\n".join(f'    <a href="#{identifiant(c["nom"])}">{texte(c["nom"])}</a>' for c in categories)
+
+    sections = []
+    for c in categories:
+        blocs = [bloc_projet(p) for p in projets if c["nom"] in categories_de(p)]
+        sections.append(f"""<section class="theme" id="{identifiant(c['nom'])}">
+  <div class="conteneur">
+    <h2>{texte(c.get('titre', c['nom']))}</h2>
+    <div class="projets">
+
+{chr(10).join(blocs)}
+
+    </div>
+  </div>
+</section>""")
+
+    presentation = texte(" ".join(site.get("presentation", "").split()))
+    email = texte(site.get("email", ""))
+    contact = f'    <p class="contact">Contact : <a href="mailto:{email}">{email}</a></p>' if email else ""
+    pied = texte(site.get("nom", "")) + (f' · <a href="mailto:{email}">{email}</a>' if email else "")
+
+    return f"""<!DOCTYPE html>
+<!-- Page générée automatiquement par build.py à partir de Notion : ne pas modifier à la main. -->
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{texte(site.get('titre', 'Portfolio'))}</title>
+  <meta name="description" content="{presentation}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400;1,700;1,800&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="accueil">
+  <div class="conteneur">
+    <h1>{texte(site.get('titre', ''))}</h1>
+    <p class="presentation">{presentation}</p>
+{contact}
+  </div>
+</header>
+
+<nav class="onglets">
+  <div class="conteneur">
+{onglets}
+  </div>
+</nav>
+
+<main>
+
+{(chr(10) * 2).join(sections)}
+
+</main>
+
+<footer>
+  <div class="conteneur">
+    {pied}
+  </div>
+</footer>
+
+<script>
+  // Souligne l'onglet ouvert
+  function marquerOnglet() {{
+    var liens = document.querySelectorAll('.onglets a');
+    var actif = location.hash || liens[0].getAttribute('href');
+    liens.forEach(function (lien) {{
+      lien.classList.toggle('actif', lien.getAttribute('href') === actif);
+    }});
+  }}
+  window.addEventListener('hashchange', marquerOnglet);
+  marquerOnglet();
+</script>
+
+</body>
+</html>
+"""
+
+
+def main():
+    reglages = lire_reglages()
+    projets = lire_projets()
+    page = construire_page(reglages, projets)
+
+    if SORTIE.exists():
+        shutil.rmtree(SORTIE)
+    SORTIE.mkdir()
+    (SORTIE / "index.html").write_text(page, encoding="utf-8")
+    shutil.copy(DOSSIER / "style.css", SORTIE / "style.css")
+    shutil.copytree(DOSSIER / "images", SORTIE / "images")
+    print(f"Site généré dans {SORTIE.name}/.")
+
+
+if __name__ == "__main__":
+    main()

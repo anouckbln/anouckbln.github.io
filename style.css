@@ -9,6 +9,7 @@
   --texte: #1b1d26;       /* couleur du texte courant */
   --gris: #5a5f73;        /* textes secondaires */
   --ligne: #d9deef;       /* traits de séparation */
+  --tag: #f08a6c;         /* couleur des étiquettes (tags) */
   --fond: #ffffff;        /* fond des sections */
   --police: "Open Sans", Arial, sans-serif;
   --largeur: 1600px;      /* largeur maximale du contenu */
@@ -160,6 +161,38 @@ main:not(:has(.theme:target)) .theme:first-of-type {
 .projet p {
   font-size: 15px;
   margin: 0 0 12px;
+}
+
+/* Étiquettes (tags) sous le titre d'un projet */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 14px;
+}
+
+.tag {
+  background: var(--tag);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  font-style: italic;
+  padding: 3px 12px;
+  border-radius: 999px;
+}
+
+/* Méthodes (colonne « Tags » de Notion) : contour bleu */
+.tag.methode {
+  background: none;
+  color: var(--bleu);
+  box-shadow: inset 0 0 0 1.5px var(--bleu);
+}
+
+/* Ligne « En collaboration avec… » */
+.projet .collab {
+  color: var(--gris);
+  font-size: 14px;
+  font-style: italic;
 }
 
 .projet .lien {

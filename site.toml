@@ -1,0 +1,40 @@
+# =============================================================
+#  RÉGLAGES GÉNÉRAUX DU SITE
+#  Les projets, eux, viennent de Notion (dossier donnees/).
+#
+#  Règles d'écriture : un texte entre guillemets "…",
+#  un texte long entre trois guillemets """…""".
+# =============================================================
+
+[site]
+nom = "Anouck Blouin"
+titre = "Portfolio - Anouck Blouin"
+presentation = """
+Ingénieure en génie civil spécialisée en mobilité et systèmes urbains, je souhaite mettre mes compétences au service de l'adaptation des villes au changement climatique. Vous trouverez ici un aperçu de mes projets.
+"""
+email = "anouck.blouin@yahoo.fr"
+
+# Texte placé devant le contenu de la colonne « Collaboration » de Notion
+texte_collaboration = "En collaboration avec"
+
+
+# ---------- Onglets ----------
+# L'ordre ici est l'ordre des onglets. Le premier s'ouvre à l'arrivée sur le site.
+# - nom   : doit être écrit EXACTEMENT comme l'option de la colonne « Catégorie » dans Notion ;
+# - titre : titre affiché en haut de l'onglet (facultatif, sinon on reprend le nom).
+
+[[categorie]]
+nom = "Observer et diagnostiquer le territoire"
+
+[[categorie]]
+nom = "Mesurer pour accompagner la transition"
+
+[[categorie]]
+nom = "Comprendre les usages"
+
+[[categorie]]
+nom = "Aménager durablement le territoire"
+
+[[categorie]]
+nom = "Autres projets"
+titre = "Imaginer le futur"

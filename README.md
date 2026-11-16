@@ -2,62 +2,84 @@
 
 Site en ligne : https://anouckbln.github.io
 
-Le site tient en trois éléments :
+## Comment ça marche
 
-- `index.html` : tout le contenu (textes, projets, liens) ;
-- `style.css` : la mise en forme (couleurs, police, tailles) ;
-- `images/` : les images des projets.
+Les projets sont rédigés dans la base Notion « Portfolio ». On l'exporte en CSV, on dépose le fichier sur GitHub, et le site se regénère tout seul.
 
-Chaque modification enregistrée sur GitHub est en ligne une ou deux minutes plus tard.
+| Fichier | Rôle | À modifier ? |
+|---|---|---|
+| `donnees/` | L'export CSV de la base Notion | Oui, à chaque mise à jour |
+| `images/` | Les images des projets | Oui, pour en ajouter |
+| `site.toml` | Présentation, contact, liste et ordre des onglets | De temps en temps |
+| `style.css` | Couleurs, police, tailles, marges | Pour changer l'apparence |
+| `build.py` | Le script Python qui transforme le CSV en site | Non |
+| `.github/workflows/publier.yml` | Lance `build.py` et publie le site à chaque modification | Non |
 
 ---
 
-## Modifier un texte
+## La base Notion
 
-1. Sur GitHub, ouvre `index.html` puis clique sur l'icône **crayon** (Edit this file).
-2. Avec `Ctrl+F` (`Cmd+F` sur Mac), cherche le texte à changer.
-3. Modifie-le **entre les balises** (par exemple entre `<p>` et `</p>`), sans toucher aux balises elles-mêmes.
-4. Clique sur **Commit changes…** puis à nouveau sur **Commit changes**.
+Colonnes reconnues (le nom compte, pas l'ordre ; majuscules et accents ignorés) :
 
-## Ajouter un projet
+| Colonne Notion | Type conseillé | Ce qu'elle devient sur le site |
+|---|---|---|
+| **Nom** | Titre | Titre du projet |
+| **Entreprise** | Sélection | Ligne grise sous le titre (EPFL, Action Située…) |
+| **Collaboration, propriété intellectuelle** | Texte | Ligne « En collaboration avec … » sous la description |
+| **Description** | Texte | Texte du projet ; une ligne vide = un nouveau paragraphe |
+| **thèmes** | Sélection multiple | Étiquettes saumon |
+| **Tags** | Sélection multiple | Étiquettes à contour bleu (méthodes, outils) |
+| **Catégorie** | Sélection (ou multiple) | Onglet où le projet apparaît |
+| **Images** | Texte | Noms des fichiers du dossier `images/`, séparés par des virgules |
+| **Lien** | URL | Bouton « Voir le projet » |
+| **Brouillon** | Case à cocher | Cochée : le projet est caché |
+| **Ordre** | Nombre (facultatif) | Ordre d'affichage ; sinon, l'ordre de l'export |
 
-1. Dans `index.html`, repère la section voulue grâce aux grands commentaires `SECTION 1`, `SECTION 2`…
-2. Copie un bloc existant, de `<article class="projet">` jusqu'à `</article>`, ou le modèle commenté en haut du fichier.
-3. Colle-le juste avant la ligne `</div>` qui ferme la liste de projets de cette section.
-4. Change le titre, le cadre, la description et le nom de l'image.
+Toute autre colonne est ignorée : tu peux en garder pour toi (dates, notes…).
 
-Pour supprimer un projet, efface son bloc entier, de `<article class="projet">` jusqu'à `</article>`.
+Les options de **Catégorie** doivent être écrites exactement comme les onglets de `site.toml`.
 
-## Ajouter ou remplacer une image
+## Mettre le site à jour après une modification dans Notion
 
-1. Ouvre le dossier `images/`, puis **Add file › Upload files** et glisse ton image.
+1. Dans Notion, ouvre la base Portfolio, clique sur **•••** en haut à droite, puis **Exporter**.
+2. Choisis **Markdown & CSV**, puis **Exporter**. Dézippe le fichier téléchargé.
+3. Sur GitHub, ouvre le dossier `donnees/`, clique sur **Add file › Upload files**, glisse les fichiers `.csv` et valide avec **Commit changes**.
+
+Les fichiers exportés ont toujours le même nom : ils remplacent les anciens. Le site est en ligne une à deux minutes plus tard.
+
+## Ajouter une image
+
+1. Ouvre le dossier `images/` sur GitHub, puis **Add file › Upload files** et glisse ton image.
 2. Donne-lui un nom simple, sans espaces ni accents, par exemple `film-lignon.jpg`.
-3. Dans `index.html`, écris ce nom aux deux endroits de la ligne :
+3. Dans Notion, écris ce nom dans la colonne **Images** du projet (plusieurs images : `a.jpg, b.jpg`).
 
-```html
-<a href="images/film-lignon.jpg" target="_blank"><img src="images/film-lignon.jpg" alt="Ce que montre l'image"></a>
+Conseil : garde des images de moins de 500 Ko (1600 px de large suffisent). Pour réduire une image : squoosh.app.
+
+## Ajouter ou renommer un onglet
+
+1. Dans `site.toml`, ajoute ou modifie un bloc :
+
+```toml
+[[categorie]]
+nom = "Faire participer"
+titre = "Faire participer les habitant·es"
 ```
 
-Conseil : garde des images de moins de 500 Ko (1600 px de large suffisent) pour que le site reste rapide. Pour réduire une image, tu peux utiliser squoosh.app.
+2. Dans Notion, ajoute la même option à la colonne **Catégorie**, écrite exactement pareil que `nom`.
 
-## Ajouter une section
+L'ordre des blocs dans `site.toml` est l'ordre des onglets. Le premier s'ouvre à l'arrivée sur le site.
 
-1. Copie une section entière, de `<section class="theme" id="…">` jusqu'à `</section>`.
-2. Donne-lui un nouvel `id`, court et sans accents, par exemple `id="participer"`.
-3. Ajoute l'onglet correspondant dans la barre d'onglets (bloc `<nav class="onglets">`), en reprenant le même id précédé de `#` :
+## Changer l'apparence
 
-```html
-<a href="#participer">Faire participer les habitant·es</a>
-```
+Ouvre `style.css` : les couleurs, la police et la largeur se règlent dans les premières lignes (`--bleu`, `--tag`, `--largeur`…). Les marges sur les côtés sont dans le bloc `.conteneur`, et la largeur minimale des blocs projets dans le bloc `.projets` (`360px`).
 
-L'onglet affiché à l'arrivée sur le site est la première section de la page. Pour en changer, déplace la section voulue en premier.
+## Si le site ne se met pas à jour
 
-## Changer les couleurs, la police ou les marges
+1. Ouvre l'onglet **Actions** du dépôt. Clique sur la dernière exécution, puis sur l'étape **Générer le site**.
+2. Lis les lignes « Attention : … ». Elles signalent une image introuvable ou une catégorie mal orthographiée. Le site est quand même publié, sans l'élément en cause.
+3. Une croix rouge signale une erreur bloquante, le plus souvent un guillemet oublié dans `site.toml` : le message indique la ligne.
+4. Le navigateur garde parfois l'ancienne version en mémoire : recharge la page avec `Ctrl+Maj+R` (`Cmd+Maj+R` sur Mac).
 
-Ouvre `style.css` : tout se règle dans les premières lignes (`--bleu`, `--texte`, `--largeur`…). Par exemple, remplace `#0a27a8` par un autre code couleur. Les marges sur les côtés se règlent dans le bloc `.conteneur`, et la largeur minimale des blocs projets dans le bloc `.projets` (`360px`).
+## Voir le site sur ton ordinateur avant de publier (facultatif)
 
-## Si quelque chose ne s'affiche plus
-
-- Va dans l'onglet **Actions** du dépôt pour vérifier que la publication a réussi (coche verte).
-- Le plus souvent, une balise a été effacée ou un guillemet `"` oublié. Ouvre l'onglet **History** de `index.html` pour voir ta dernière modification, et revenir à la version précédente si besoin.
-- Le navigateur garde parfois l'ancienne version en mémoire : recharge la page avec `Ctrl+Maj+R` (`Cmd+Maj+R` sur Mac).
+Avec Python 3.11 ou plus récent, ouvre un terminal dans le dossier du site et lance `python build.py`, puis ouvre `_site/index.html` dans ton navigateur.
