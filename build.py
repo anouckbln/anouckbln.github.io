@@ -16,6 +16,7 @@ Nécessite Python 3.11 ou plus récent, sans aucune installation.
 
 import csv
 import html
+import io
 import re
 import shutil
 import sys
@@ -49,6 +50,10 @@ COLONNES = {
     "annee":         ["annee", "date", "periode"],
     "mosaique":      ["mosaique", "photo mosaique", "photos mosaique", "photo d'accueil"],
     "une":           ["a la une", "une", "mis en avant", "en avant"],
+    "contexte":      ["contexte"],
+    "role":          ["mon role", "role"],
+    "methode":       ["methode", "methodes et outils", "demarche"],
+    "resultats":     ["resultats", "resultat", "realisation"],
     "type":          ["type", "nature", "type de projet"],
 }
 
@@ -99,19 +104,32 @@ def trouver_csv():
     fichiers = sorted((DOSSIER / "donnees").glob("*.csv"))
     if not fichiers:
         sys.exit("Aucun fichier CSV dans le dossier donnees/. "
-                 "Exporte ta base Notion en CSV et dépose le fichier dans ce dossier.")
-    # Notion exporte deux fichiers : « …_all.csv » contient toutes les lignes.
-    complets = [f for f in fichiers if f.stem.endswith("_all")]
+                 "Enregistre ton tableau Excel en CSV sous le nom projets.csv et dépose-le dans ce dossier.")
+    # Le tableau s'appelle projets.csv ; sinon (ancien export Notion) le fichier « …_all.csv »
+    complets = ([f for f in fichiers if f.name.lower() == "projets.csv"]
+                or [f for f in fichiers if f.stem.endswith("_all")])
     choisi = (complets or fichiers)[0]
     if len(complets or fichiers) > 1:
         print(f"Plusieurs CSV trouvés, j'utilise « {choisi.name} ».")
     return choisi
 
 
+def lire_texte_csv(chemin):
+    """Excel enregistre en UTF-8 (« CSV UTF-8 ») ou en Windows-1252 (« CSV ») : on accepte les deux."""
+    brut = chemin.read_bytes()
+    try:
+        return brut.decode("utf-8-sig")
+    except UnicodeDecodeError:
+        return brut.decode("cp1252")
+
+
 def lire_projets():
     chemin = trouver_csv()
-    with open(chemin, encoding="utf-8-sig", newline="") as f:
-        lignes = list(csv.DictReader(f))
+    contenu = lire_texte_csv(chemin)
+    # Excel en français sépare les colonnes par « ; », d'autres logiciels par « , »
+    entete = contenu.split("\n", 1)[0]
+    separateur = max([";", ",", "\t"], key=entete.count)
+    lignes = list(csv.DictReader(io.StringIO(contenu, newline=""), delimiter=separateur))
     if not lignes:
         return []
 
@@ -380,10 +398,23 @@ def carte_projet(p, tag_actif=None, grande=False):
       </article>"""
 
 
+# Colonnes du tableau qui forment la page détaillée d'un projet, dans cet ordre
+SECTIONS_DETAIL = [("contexte", "Contexte"), ("role", "Mon rôle"),
+                   ("methode", "Méthode"), ("resultats", "Résultats")]
+
+
 def page_projet(p, pages):
     """La page détaillée d'un projet."""
+    sections_remplies = [(cle, titre) for cle, titre in SECTIONS_DETAIL if p.get(cle, "").strip()]
     corps = pages.get(identifiant(p["titre"]))
-    if corps:
+    if sections_remplies:
+        # Colonnes Contexte, Mon rôle, Méthode, Résultats du tableau
+        morceaux = []
+        for cle, titre in sections_remplies:
+            morceaux.append(f"<h3>{titre}</h3>")
+            morceaux.append(markdown_vers_html(p[cle], DOSSIER / "donnees" / "projets.csv"))
+        texte_page = "\n".join(morceaux)
+    elif corps:
         texte_page = markdown_vers_html(*corps)
     else:
         texte_page = paragraphes(p.get("description", ""))
@@ -711,8 +742,8 @@ def main():
     projets = lire_projets()
     pages = lire_pages_notion()
     page = construire_page(reglages, projets, pages)
-    avec_page = sum(1 for p in projets if identifiant(p["titre"]) in pages)
-    print(f"{avec_page} projets ont une page détaillée écrite dans Notion, "
+    avec_page = sum(1 for p in projets if any(p.get(c, "").strip() for c, _ in SECTIONS_DETAIL))
+    print(f"{avec_page} projets ont une page détaillée (colonnes Contexte, Mon rôle, Méthode, Résultats), "
           f"les autres utilisent la colonne Description.")
 
     if SORTIE.exists():
