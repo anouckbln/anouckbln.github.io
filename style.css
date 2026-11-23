@@ -321,7 +321,10 @@ main:not(:has(.theme:target)) .theme:first-of-type {
   gap: 20px;
 }
 
-.detail-images img { width: 100%; }
+.detail-images img {
+  width: auto;          /* jamais plus grande que sa taille réelle, pour rester nette */
+  max-width: 100%;
+}
 .detail-images a:hover img { opacity: .9; }
 
 /* ---------- Étiquettes (tags), cliquables ---------- */
