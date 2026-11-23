@@ -403,6 +403,19 @@ SECTIONS_DETAIL = [("contexte", "Contexte"), ("role", "Mon rôle"),
                    ("methode", "Méthode"), ("resultats", "Résultats")]
 
 
+MOTS_DE_LIAISON = {"et", "and", "de", "du", "des", "d", "la", "le", "van", "von", "da", "di"}
+
+
+def phrase_collaboration(valeur):
+    """Des noms (« Lou Mandonnet, Vincent Viguié ») -> « En collaboration avec Lou Mandonnet, Vincent Viguié ».
+    Une phrase (« Travail réalisé en groupe ») est affichée telle quelle."""
+    mots = re.findall(r"[\w'’-]+", valeur)
+    que_des_noms = all(m[0].isupper() or m.lower() in MOTS_DE_LIAISON for m in mots)
+    if que_des_noms:
+        return f"{PREFIXE_COLLAB} {valeur.strip()}"
+    return valeur.strip()
+
+
 def page_projet(p, pages):
     """La page détaillée d'un projet."""
     sections_remplies = [(cle, titre) for cle, titre in SECTIONS_DETAIL if p.get(cle, "").strip()]
@@ -421,7 +434,7 @@ def page_projet(p, pages):
 
     extra = []
     if p.get("collaboration"):
-        extra.append(f'<p class="collab">{texte(PREFIXE_COLLAB)} {texte(p["collaboration"])}</p>')
+        extra.append(f'<p class="collab">{texte(phrase_collaboration(p["collaboration"]))}</p>')
     if p.get("lien"):
         libelle = p.get("texte_lien") or "Voir le projet"
         extra.append(f'<p><a class="lien" href="{texte(p["lien"])}" target="_blank">{texte(libelle)} →</a></p>')
