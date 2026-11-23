@@ -22,7 +22,7 @@ mention_ia = ""
 
 [accueil]
 onglet = "Accueil"       # texte du lien dans le menu
-legende = "La ville sous toutes ses formes"
+legende = ""
 
 # La mosaïque : 9 photos, dans l'ordre (de gauche à droite, ligne par ligne).
 # Elles apparaissent une par une à l'ouverture du site.
