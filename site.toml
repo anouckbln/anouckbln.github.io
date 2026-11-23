@@ -80,6 +80,8 @@ Nos territoires ont besoin d'ingénierie, de données et d'une compréhension tr
 titre = "Projets"
 intro = "Observer et diagnostiquer le territoire, mesurer la transition, comprendre les usages et aménager durablement."
 tous = "Tous"
+titre_une = "À la une"          # rangée des projets cochés « À la une » dans Notion
+titre_autres = "Tous les projets"
 cv_dans_menu = true      # ajoute « CV » dans le menu (false pour l'enlever)
 
 

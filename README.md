@@ -39,6 +39,8 @@ Colonnes reconnues (le nom compte, pas l'ordre ; majuscules et accents ignorés)
 | **Texte du lien** | Texte | Texte de ce lien (« Voir le projet » par défaut) |
 | **Collaboration, propriété intellectuelle** | Texte | Ligne « En collaboration avec … » sous la description |
 | **Brouillon** | Case à cocher | Cochée : le projet est caché |
+| **Type** | Sélection | Professionnel, Recherche, Master… : affiché au-dessus du titre |
+| **À la une** | Case à cocher | Cochée : le projet apparaît en grand en haut de la page Projets |
 | **Ordre** | Nombre | Ordre d'affichage sur la page Projets : 1 = en premier. Mets tes meilleurs projets en tête |
 
 Toute autre colonne est ignorée : tu peux en garder pour toi (dates, notes…).

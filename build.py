@@ -48,6 +48,8 @@ COLONNES = {
     "resume":        ["resume", "resume court", "accroche"],
     "annee":         ["annee", "date", "periode"],
     "mosaique":      ["mosaique", "photo mosaique", "photos mosaique", "photo d'accueil"],
+    "une":           ["a la une", "une", "mis en avant", "en avant"],
+    "type":          ["type", "nature", "type de projet"],
 }
 
 
@@ -346,15 +348,21 @@ def ancre(p):
     return "projet-" + identifiant(p["titre"])
 
 
-def carte_projet(p, tag_actif=None):
+def est_a_la_une(p):
+    return simplifier(p.get("une", "")) in ("yes", "oui", "true", "x", "1")
+
+
+def carte_projet(p, tag_actif=None, grande=False):
     """La carte d'un projet dans une page de catégorie ou d'étiquette."""
     images = images_de(p)
     image = (f'<div class="carte-image"><img src="{texte(images[0])}" alt="" loading="lazy"></div>'
              if images else '')
     st = sous_titre(p)
-    return f"""      <article class="carte">
+    type_projet = f'<p class="type">{texte(p["type"])}</p>' if p.get("type") else ""
+    return f"""      <article class="carte{' grande' if grande else ''}">
         <a class="carte-lien" href="#{ancre(p)}">
           {image}
+          {type_projet}
           <h3>{texte(p['titre'])}</h3>
           {f'<p class="sous-titre">{st}</p>' if st else ''}
           <p class="resume">{texte(resume(p))}</p>
@@ -385,6 +393,7 @@ def page_projet(p, pages):
     return f"""<section class="theme page-projet" id="{ancre(p)}">
   <div class="conteneur">
     <p class="retour"><a href="#" onclick="history.back(); return false;">← Retour</a></p>
+    {f'<p class="type">{texte(p["type"])}</p>' if p.get("type") else ''}
     <h2>{texte(p['titre'])}</h2>
     {f'<p class="sous-titre">{st}</p>' if st else ''}
     {bloc_tags(p)}
@@ -570,11 +579,24 @@ def construire_page(reglages, projets, pages):
 
     intro_projets = (f'\n    <p class="intro-projets">{texte(reglages_projets["intro"])}</p>'
                      if reglages_projets.get("intro") else "")
+    # « À la une » : les projets cochés dans Notion, en grand, puis tous les autres
+    une = [p for p in projets if est_a_la_une(p)]
+    if une:
+        autres = [p for p in projets if not est_a_la_une(p)]
+        rangees_projets = (f'    <h3 class="titre-rangee">{texte(reglages_projets.get("titre_une", "À la une"))}</h3>\n'
+                           f'    <div class="projets une">\n\n'
+                           + "\n".join(carte_projet(p, grande=True) for p in une)
+                           + "\n\n    </div>\n"
+                           f'    <h3 class="titre-rangee">{texte(reglages_projets.get("titre_autres", "Tous les projets"))}</h3>\n'
+                           + grille([carte_projet(p) for p in autres]))
+    else:
+        rangees_projets = grille([carte_projet(p) for p in projets])
+
     sections.append(f"""<section class="theme" id="projets">
   <div class="conteneur">
     <h2>{texte(titre_projets)}</h2>{intro_projets}
 {barre_filtres(None)}
-{grille([carte_projet(p) for p in projets])}
+{rangees_projets}
   </div>
 </section>""")
     for c in categories:

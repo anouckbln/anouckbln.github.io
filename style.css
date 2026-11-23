@@ -318,6 +318,34 @@ main:not(:has(.theme:target)) .theme:first-of-type {
   align-items: start;
 }
 
+/* ---------- « À la une » : rangée de grandes cartes ---------- */
+.titre-rangee {
+  font-size: var(--taille-petite);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin: 0 0 18px;
+}
+
+.projets.une {
+  grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr));
+  gap: 40px 40px;
+  margin-bottom: 64px;
+}
+
+.carte.grande .carte-image { aspect-ratio: 16 / 10; }
+.carte.grande h3 { font-size: calc(var(--taille-titre-projet) * 1.2); }
+
+/* Type de projet (Professionnel, Recherche, Master…) au-dessus du titre */
+.type {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--tag);
+  margin: 0 0 4px;
+}
+
 /* ---------- Carte d'un projet (cliquable) ---------- */
 .carte-lien {
   display: block;
