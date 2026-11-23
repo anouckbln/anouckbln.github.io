@@ -4,9 +4,9 @@ Génère le site du portfolio à partir de l'export Notion.
     python build.py
 
 Lit :
-  - site.toml            : présentation, contact, liste des onglets ;
+  - site.toml            : page « A propos », menu, couleurs des étiquettes ;
   - donnees/*.csv        : l'export CSV de la base Notion « Portfolio ».
-Crée le site dans le dossier _site/ (index.html, style.css, images/).
+Crée le site dans le dossier _site/ (index.html, style.css, images/, documents/).
 
 Sur GitHub, ce script est lancé automatiquement à chaque modification :
 il n'y a normalement pas besoin d'y toucher.
@@ -26,6 +26,8 @@ from urllib.parse import unquote
 DOSSIER = Path(__file__).parent
 SORTIE = DOSSIER / "_site"
 PREFIXE_COLLAB = "En collaboration avec"
+AFFICHER_THEMES = False
+NOM = ""
 
 # Colonnes Notion reconnues (sans tenir compte des majuscules ni des accents).
 # Pour renommer une colonne dans Notion, ajoute son nouveau nom ici.
@@ -154,20 +156,37 @@ def noms_images(valeur):
 # Construction de la page
 # ---------------------------------------------------------------
 
-def lien_tag(nom, classe, tag_actif):
+COULEURS_TAGS = {}
+
+
+def lien_tag(nom, tag_actif):
     """Une étiquette cliquable qui ouvre la page regroupant les projets de ce tag."""
     actif = " actif" if tag_actif and identifiant(nom) == identifiant(tag_actif) else ""
-    return f'<a class="{classe}{actif}" href="#tag-{identifiant(nom)}">{texte(nom)}</a>'
+    couleur = COULEURS_TAGS.get(identifiant(nom))
+    style = f' style="--couleur-tag: {texte(couleur)}"' if couleur else ""
+    return f'<a class="tag{actif}"{style} href="#tag-{identifiant(nom)}">{texte(nom)}</a>'
+
+
+def etiquettes_de(p):
+    """Les étiquettes affichées : colonne Tags, et thèmes si afficher_themes = true."""
+    tags = liste(p.get("methodes"))
+    if AFFICHER_THEMES:
+        tags = liste(p.get("themes")) + tags
+    return tags
+
+
+def titre_complet(p):
+    """« Titre - Cadre », comme sur la maquette."""
+    titre, cadre = p["titre"].strip(), p.get("cadre", "").strip()
+    if cadre and not titre.endswith(cadre):
+        return f"{titre} - {cadre}"
+    return titre
 
 
 def bloc_projet(p, tag_actif=None):
-    m = [f"        <h3>{texte(p['titre'])}</h3>"]
+    m = [f"        <h3>{texte(titre_complet(p))}</h3>"]
 
-    if p.get("cadre"):
-        m.append(f'        <p class="cadre">{texte(p["cadre"])}</p>')
-
-    etiquettes = [lien_tag(t, "tag", tag_actif) for t in liste(p.get("themes"))]
-    etiquettes += [lien_tag(t, "tag methode", tag_actif) for t in liste(p.get("methodes"))]
+    etiquettes = [lien_tag(t, tag_actif) for t in etiquettes_de(p)]
     if etiquettes:
         m.append(f'        <div class="tags">{"".join(etiquettes)}</div>')
 
@@ -195,25 +214,78 @@ def bloc_projet(p, tag_actif=None):
     return '      <article class="projet">\n' + "\n".join(m) + "\n      </article>"
 
 
+def section_a_propos(ap):
+    """La page « A propos », sur fond bleu."""
+    if not ap:
+        return ""
+    contact = [f'<p class="contact-nom">{texte(NOM)}</p>']
+    if ap.get("telephone"):
+        contact.append(f"<p>{texte(ap['telephone'])}</p>")
+    if ap.get("email"):
+        e = texte(ap["email"])
+        contact.append(f'<p><a href="mailto:{e}">{e}</a></p>')
+    if ap.get("linkedin"):
+        l = texte(ap["linkedin"])
+        contact.append(f'<p><a href="{l}" target="_blank">{l}</a></p>')
+    if ap.get("cv"):
+        if not (DOSSIER / ap["cv"]).exists():
+            print(f"Attention : le CV « {ap['cv']} » est introuvable.")
+        contact.append(f'<p class="lien-cv"><a href="{texte(ap["cv"])}" target="_blank">Voir mon CV</a></p>')
+
+    photo = ""
+    if ap.get("photo"):
+        if not (DOSSIER / ap["photo"]).exists():
+            print(f"Attention : la photo « {ap['photo']} » est introuvable.")
+        photo = f'<img class="photo" src="{texte(ap["photo"])}" alt="{texte(NOM)}">'
+
+    return f"""<section class="theme a-propos" id="a-propos">
+  <div class="conteneur">
+    <h2>{texte(ap.get('titre', ap.get('onglet', 'A propos')))}</h2>
+    <div class="carte-visite">
+      {photo}
+      <div class="contact">
+        {(chr(10) + '        ').join(contact)}
+      </div>
+    </div>
+    <div class="texte-a-propos">
+{paragraphes(ap.get('texte', ''))}
+    </div>
+  </div>
+</section>"""
+
+
 def construire_page(reglages, projets):
-    global PREFIXE_COLLAB
+    global PREFIXE_COLLAB, AFFICHER_THEMES, NOM
     site = reglages["site"]
+    ap = reglages.get("a_propos", {})
+    NOM = site.get("nom", "")
     PREFIXE_COLLAB = site.get("texte_collaboration", "En collaboration avec")
+    etiquettes = reglages.get("etiquettes", {})
+    AFFICHER_THEMES = bool(etiquettes.get("afficher_themes", False))
+    COULEURS_TAGS.update({identifiant(k): v for k, v in etiquettes.get("couleurs", {}).items()})
+
     categories = reglages.get("categorie", [])
     noms = [c["nom"] for c in categories]
     premier = noms[0] if noms else ""
 
-    def categories_de(p):
-        cats = liste(p.get("categorie"))
-        for c in cats:
+    for p in projets:
+        for c in liste(p.get("categorie")):
             if c not in noms:
                 print(f"Attention : la catégorie « {c} » (projet « {p['titre']} ») "
-                      f"n'est pas dans site.toml. Onglets possibles : {', '.join(noms)}.")
-        return cats or [premier]
+                      f"n'est pas dans site.toml, le projet n'est affiché dans aucune page. "
+                      f"Catégories possibles : {', '.join(noms)}.")
 
-    onglets = "\n".join(f'    <a href="#{identifiant(c["nom"])}">{texte(c["nom"])}</a>' for c in categories)
+    def categories_de(p):
+        return liste(p.get("categorie")) or [premier]
 
-    sections = []
+    # Menu : « A propos » puis les catégories
+    menu = []
+    if ap:
+        menu.append(f'      <a href="#a-propos">{texte(ap.get("onglet", "A propos"))}</a>')
+    menu += [f'      <a href="#{identifiant(c["nom"])}">{texte(c.get("onglet", c["nom"]))}</a>'
+             for c in categories]
+
+    sections = [section_a_propos(ap)] if ap else []
     for c in categories:
         blocs = [bloc_projet(p) for p in projets if c["nom"] in categories_de(p)]
         sections.append(f"""<section class="theme" id="{identifiant(c['nom'])}">
@@ -227,15 +299,14 @@ def construire_page(reglages, projets):
   </div>
 </section>""")
 
-    # Une page par tag (thèmes et méthodes) : tous les projets qui le portent,
-    # quel que soit leur onglet. Elle s'ouvre en cliquant sur l'étiquette.
+    # Une page par étiquette : tous les projets qui la portent, quelle que soit
+    # leur catégorie. Elle s'ouvre en cliquant sur l'étiquette.
     tags = {}
     for p in projets:
-        for t in liste(p.get("themes")) + liste(p.get("methodes")):
+        for t in etiquettes_de(p):
             tags.setdefault(identifiant(t), t)
     for slug, nom in sorted(tags.items()):
-        concernes = [p for p in projets
-                     if slug in [identifiant(t) for t in liste(p.get("themes")) + liste(p.get("methodes"))]]
+        concernes = [p for p in projets if slug in [identifiant(t) for t in etiquettes_de(p)]]
         blocs = [bloc_projet(p, tag_actif=nom) for p in concernes]
         nombre = f"{len(concernes)} projet" + ("s" if len(concernes) > 1 else "")
         sections.append(f"""<section class="theme page-tag" id="tag-{slug}">
@@ -251,10 +322,9 @@ def construire_page(reglages, projets):
   </div>
 </section>""")
 
-    presentation = texte(" ".join(site.get("presentation", "").split()))
-    email = texte(site.get("email", ""))
-    contact = f'    <p class="contact">Contact : <a href="mailto:{email}">{email}</a></p>' if email else ""
-    pied = texte(site.get("nom", "")) + (f' · <a href="mailto:{email}">{email}</a>' if email else "")
+    description = texte(" ".join(ap.get("texte", "").split())[:300])
+    email = texte(ap.get("email", ""))
+    pied = texte(NOM) + (f' · <a href="mailto:{email}">{email}</a>' if email else "")
 
     return f"""<!DOCTYPE html>
 <!-- Page générée automatiquement par build.py à partir de Notion : ne pas modifier à la main. -->
@@ -262,28 +332,23 @@ def construire_page(reglages, projets):
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{texte(site.get('titre', 'Portfolio'))}</title>
-  <meta name="description" content="{presentation}">
+  <title>{texte(site.get('titre', NOM or 'Portfolio'))}</title>
+  <meta name="description" content="{description}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400;1,700;1,800&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600;1,700;1,800&display=swap">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header class="accueil">
+<header class="entete">
   <div class="conteneur">
-    <h1>{texte(site.get('titre', ''))}</h1>
-    <p class="presentation">{presentation}</p>
-{contact}
+    <a class="nom" href="#a-propos">{texte(NOM)}</a>
+    <nav class="menu">
+{chr(10).join(menu)}
+    </nav>
   </div>
 </header>
-
-<nav class="onglets">
-  <div class="conteneur">
-{onglets}
-  </div>
-</nav>
 
 <main>
 
@@ -298,16 +363,21 @@ def construire_page(reglages, projets):
 </footer>
 
 <script>
-  // Souligne l'onglet ouvert
-  function marquerOnglet() {{
-    var liens = document.querySelectorAll('.onglets a');
+  // Souligne l'élément du menu correspondant à la page ouverte
+  function marquerMenu() {{
+    var liens = document.querySelectorAll('.menu a');
     var actif = location.hash || liens[0].getAttribute('href');
     liens.forEach(function (lien) {{
       lien.classList.toggle('actif', lien.getAttribute('href') === actif);
     }});
   }}
-  window.addEventListener('hashchange', marquerOnglet);
-  marquerOnglet();
+  // Chaque page s'ouvre en haut, menu visible
+  window.addEventListener('hashchange', function () {{
+    marquerMenu();
+    window.scrollTo(0, 0);
+  }});
+  marquerMenu();
+  if (location.hash) window.addEventListener('load', function () {{ window.scrollTo(0, 0); }});
 </script>
 
 </body>
@@ -326,6 +396,8 @@ def main():
     (SORTIE / "index.html").write_text(page, encoding="utf-8")
     shutil.copy(DOSSIER / "style.css", SORTIE / "style.css")
     shutil.copytree(DOSSIER / "images", SORTIE / "images")
+    if (DOSSIER / "documents").exists():
+        shutil.copytree(DOSSIER / "documents", SORTIE / "documents")
     print(f"Site généré dans {SORTIE.name}/.")
 
 

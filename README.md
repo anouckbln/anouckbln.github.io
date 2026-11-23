@@ -9,8 +9,9 @@ Les projets sont rédigés dans la base Notion « Portfolio ». On l'exporte en 
 | Fichier | Rôle | À modifier ? |
 |---|---|---|
 | `donnees/` | L'export CSV de la base Notion | Oui, à chaque mise à jour |
-| `images/` | Les images des projets | Oui, pour en ajouter |
-| `site.toml` | Présentation, contact, liste et ordre des onglets | De temps en temps |
+| `images/` | Les images des projets et ta photo | Oui, pour en ajouter |
+| `documents/` | Ton CV en PDF | Pour le mettre à jour |
+| `site.toml` | Page « A propos », menu, couleurs des étiquettes | De temps en temps |
 | `style.css` | Couleurs, police, tailles, marges | Pour changer l'apparence |
 | `build.py` | Le script Python qui transforme le CSV en site | Non |
 | `.github/workflows/publier.yml` | Lance `build.py` et publie le site à chaque modification | Non |
@@ -24,22 +25,23 @@ Colonnes reconnues (le nom compte, pas l'ordre ; majuscules et accents ignorés)
 | Colonne Notion | Type conseillé | Ce qu'elle devient sur le site |
 |---|---|---|
 | **Nom** | Titre | Titre du projet |
-| **Entreprise** | Sélection | Ligne grise sous le titre (EPFL, Action Située…) |
-| **Collaboration, propriété intellectuelle** | Texte | Ligne « En collaboration avec … » sous la description |
+| **Entreprise** | Sélection | Ajoutée après le titre : « Titre - Entreprise ». Laisse vide si le titre la contient déjà |
 | **Description** | Texte | Texte du projet ; une ligne vide = un nouveau paragraphe |
-| **thèmes** | Sélection multiple | Étiquettes saumon, cliquables |
-| **Tags** | Sélection multiple | Étiquettes à contour bleu (méthodes, outils), cliquables |
-| **Catégorie** | Sélection (ou multiple) | Onglet où le projet apparaît |
+| **Tags** | Sélection multiple | Étiquettes saumon sous le titre, cliquables |
+| **thèmes** | Sélection multiple | Non affichés (voir `afficher_themes` dans `site.toml`) |
+| **Catégorie** | Sélection | Page où le projet apparaît |
 | **Images** | Texte | Noms des fichiers du dossier `images/`, séparés par des virgules |
-| **Lien** | URL | Bouton « Voir le projet » |
+| **Lien** | URL | Lien sous la description |
+| **Texte du lien** | Texte | Texte de ce lien (« Voir le projet » par défaut) |
+| **Collaboration, propriété intellectuelle** | Texte | Ligne « En collaboration avec … » sous la description |
 | **Brouillon** | Case à cocher | Cochée : le projet est caché |
 | **Ordre** | Nombre (facultatif) | Ordre d'affichage ; sinon, l'ordre de l'export |
 
-Chaque étiquette (thème ou tag) est cliquable : elle ouvre une page qui regroupe tous les projets portant cette étiquette, quel que soit leur onglet. Ces pages sont créées automatiquement : un nouveau tag ajouté dans Notion a sa page dès la prochaine mise à jour. Pour regrouper deux projets, il suffit donc de leur donner le même tag, écrit de la même façon.
-
 Toute autre colonne est ignorée : tu peux en garder pour toi (dates, notes…).
 
-Les options de **Catégorie** doivent être écrites exactement comme les onglets de `site.toml`.
+Les options de **Catégorie** doivent être écrites exactement comme les `nom` de `site.toml`. Un projet dont la catégorie n'y est pas (par exemple « Autres projets ») n'apparaît nulle part.
+
+Chaque étiquette est cliquable : elle ouvre une page qui regroupe tous les projets portant cette étiquette, quelle que soit leur catégorie. Ces pages sont créées automatiquement. Pour regrouper des projets, il suffit de leur donner la même étiquette, écrite exactement pareil.
 
 ## Mettre le site à jour après une modification dans Notion
 
@@ -57,23 +59,42 @@ Les fichiers exportés ont toujours le même nom : ils remplacent les anciens. L
 
 Conseil : garde des images de moins de 500 Ko (1600 px de large suffisent). Pour réduire une image : squoosh.app.
 
-## Ajouter ou renommer un onglet
+## Modifier la page « A propos »
+
+Tout est dans le bloc `[a_propos]` de `site.toml` : texte, téléphone, email, LinkedIn, photo et CV. Pour ne pas afficher un élément, remplace sa valeur par `""`.
+
+Pour mettre à jour ton CV, dépose le nouveau PDF dans `documents/` avec le même nom, `CV_Anouck_Blouin.pdf`. Il remplace l'ancien.
+
+## Ajouter ou renommer une catégorie
 
 1. Dans `site.toml`, ajoute ou modifie un bloc :
 
 ```toml
 [[categorie]]
 nom = "Faire participer"
+onglet = "Faire participer les habitant·es"
 titre = "Faire participer les habitant·es"
 ```
 
-2. Dans Notion, ajoute la même option à la colonne **Catégorie**, écrite exactement pareil que `nom`.
+- `nom` : écrit exactement comme l'option de la colonne **Catégorie** dans Notion ;
+- `onglet` : texte du menu (facultatif) ;
+- `titre` : titre de la page (facultatif).
 
-L'ordre des blocs dans `site.toml` est l'ordre des onglets. Le premier s'ouvre à l'arrivée sur le site.
+2. Dans Notion, ajoute la même option à la colonne **Catégorie**.
+
+L'ordre des blocs dans `site.toml` est l'ordre du menu, après « A propos ».
+
+## Couleurs des étiquettes
+
+Les étiquettes sont saumon. Pour en colorer certaines autrement, ajoute une ligne dans le bloc `[etiquettes.couleurs]` de `site.toml` :
+
+```toml
+"Publication" = "#2bb5a5"
+```
 
 ## Changer l'apparence
 
-Ouvre `style.css` : les couleurs, la police et la largeur se règlent dans les premières lignes (`--bleu`, `--tag`, `--largeur`…). Les marges sur les côtés sont dans le bloc `.conteneur`, et la largeur minimale des blocs projets dans le bloc `.projets` (`360px`).
+Ouvre `style.css` : les couleurs, la police et les largeurs se règlent dans les premières lignes (`--bleu`, `--tag`, `--largeur`, `--colonne`…). `--colonne` est la largeur minimale d'un bloc projet : plus elle est petite, plus il y a de projets par ligne.
 
 ## Si le site ne se met pas à jour
 

@@ -3,38 +3,60 @@
 #  Les projets, eux, viennent de Notion (dossier donnees/).
 #
 #  Règles d'écriture : un texte entre guillemets "…",
-#  un texte long entre trois guillemets """…""".
+#  un texte long entre trois guillemets """…""" ;
+#  une ligne vide sépare deux paragraphes.
 # =============================================================
 
 [site]
 nom = "Anouck Blouin"
-titre = "Portfolio - Anouck Blouin"
-presentation = """
-Ingénieure en génie civil spécialisée en mobilité et systèmes urbains, je souhaite mettre mes compétences au service de l'adaptation des villes au changement climatique. Vous trouverez ici un aperçu de mes projets.
-"""
+titre = "Anouck Blouin - Portfolio"
+
+
+# ---------- Page « A propos » ----------
+# C'est la page affichée à l'arrivée sur le site.
+# Pour ne pas afficher un élément, mets "" (par exemple telephone = "").
+
+[a_propos]
+onglet = "A propos"
+photo = "images/photo-anouck.jpg"
+telephone = "+33 6 10 43 35 26"
 email = "anouck.blouin@yahoo.fr"
+linkedin = "https://www.linkedin.com/in/anouck-blouin-3b9436202/"
+cv = "documents/CV_Anouck_Blouin.pdf"
+texte = """
+Ingénieure diplômée de l'EPFL en génie civil, climat et transformation des territoires, je souhaite agir pour l'aménagement de territoires durables. Au cœur de mes préoccupations : l'adaptation des territoires au changement climatique, mais aussi la transformation des villes au service du bien-être et de la santé des habitant·es. Une transformation juste et durable des territoires nécessite de prendre en compte les inégalités sociales, environnementales et d'accès aux services, notamment de santé.
 
-# Texte placé devant le contenu de la colonne « Collaboration » de Notion
-texte_collaboration = "En collaboration avec"
+Je crois en la force des données pour éclairer la décision publique, embarquer les habitant·es et prendre des décisions éclairées. Il faut vulgariser les sujets, notamment à travers la facilitation graphique.
+
+Nos territoires ont besoin d'ingénierie, de données et d'une compréhension transversale pour se transformer et offrir aux habitant·es un urbanisme favorable à la santé et des espaces publics de qualité.
+"""
 
 
-# ---------- Onglets ----------
-# L'ordre ici est l'ordre des onglets. Le premier s'ouvre à l'arrivée sur le site.
-# - nom   : doit être écrit EXACTEMENT comme l'option de la colonne « Catégorie » dans Notion ;
-# - titre : titre affiché en haut de l'onglet (facultatif, sinon on reprend le nom).
-
-[[categorie]]
-nom = "Observer et diagnostiquer"
-
-[[categorie]]
-nom = "Mesurer pour accompagner la transition"
-
-[[categorie]]
-nom = "Comprendre les usages"
+# ---------- Catégories de projets ----------
+# L'ordre ici est l'ordre du menu, après « A propos ».
+# - nom    : doit être écrit EXACTEMENT comme l'option de la colonne « Catégorie » dans Notion ;
+# - onglet : texte du menu (facultatif, sinon on reprend le nom) ;
+# - titre  : titre affiché en haut de la page (facultatif, sinon on reprend le nom).
 
 [[categorie]]
-nom = "Aménager des espaces publics de qualité"
+nom = "Observer et diagnostiquer le territoire"
 
 [[categorie]]
-nom = "Autres projets"
-titre = "Imaginer le futur"
+nom = "Aménager durablement le territoire"
+onglet = "Aménager des espaces publics favorables à l'équité, au bien-être des habitant·es"
+
+[[categorie]]
+nom = "Mesurer la transition"
+
+[[categorie]]
+nom = "Comprendre les usages et les expériences"
+
+
+# ---------- Étiquettes ----------
+[etiquettes]
+# Afficher aussi la colonne « thèmes » de Notion (true) ou seulement « Tags » (false)
+afficher_themes = false
+
+# Couleur particulière pour certaines étiquettes (les autres sont saumon)
+[etiquettes.couleurs]
+"Publication" = "#2bb5a5"
