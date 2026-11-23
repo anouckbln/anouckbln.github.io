@@ -10,6 +10,8 @@
 [site]
 nom = "Anouck Blouin"
 titre = "Anouck Blouin - Portfolio"
+# Mot placé devant les noms de la colonne « Collaboration » du tableau
+texte_collaboration = "Avec"
 # Mention en bas de chaque page (mets "" pour l'enlever)
 mention_ia = "Site conçu et développé avec l'aide d'une IA (Claude, Anthropic). Projets et contenus : Anouck Blouin."
 

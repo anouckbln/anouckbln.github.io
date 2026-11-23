@@ -43,7 +43,7 @@ L'ordre des colonnes n'a pas d'importance, seul leur nom compte. Toute autre col
 | **À la une** | `oui` : le projet apparaît en grand en haut de la page Projets |
 | **Type** | Professionnel, Recherche, Master… : en saumon sous le titre |
 | **Entreprise** | Sous le titre (EPFL, Action Située…) |
-| **Collaboration, propriété intellectuelle** | Sur la page du projet. Des noms (« Lou Mandonnet, Vincent Viguié ») deviennent « En collaboration avec Lou Mandonnet, Vincent Viguié » ; une phrase (« Travail réalisé en groupe ») est affichée telle quelle |
+| **Collaboration, propriété intellectuelle** | Sur la page du projet. Des noms (« Lou Mandonnet, Vincent Viguié ») deviennent « Avec Lou Mandonnet, Vincent Viguié » (mot réglable avec `texte_collaboration` dans `site.toml`) ; une phrase (« Travail réalisé en groupe ») est affichée telle quelle |
 | **Description** | Texte de la page du projet, si les quatre colonnes suivantes sont vides |
 | **Contexte**, **Mon rôle**, **Méthode**, **Résultats** | Les parties de la page du projet, dans cet ordre. Une colonne vide n'est pas affichée |
 | **Tags** | Étiquettes cliquables (compétences et méthodes), séparées par des virgules |
