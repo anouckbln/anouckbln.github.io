@@ -30,15 +30,15 @@ legende = "La ville sous toutes ses formes"
 # - description : ce que montre la photo (lu par les personnes malvoyantes).
 # Pour revenir à une seule image, supprime ces lignes et écris : image = "images/couverture.png"
 mosaique = [
-  { image = "images/mosaique-1-pelouse.jpg",     projet = "", description = "Un groupe assis sur une pelouse au soleil" },
-  { image = "images/mosaique-2-reunion.jpg",     projet = "", description = "Une réunion de travail devant une grande carte aérienne" },
+  { image = "images/mosaique-1-pelouse.jpg",     projet = "Enquête sociologie urbaine - Ballon et genre dans la ville", description = "Un groupe assis sur une pelouse au soleil" },
+  { image = "images/mosaique-2-reunion.jpg",     projet = "Indicateurs de suivi des politiques environnementales du Grand Genève", description = "Une réunion de travail devant une grande carte aérienne" },
   { image = "images/mosaique-3-fanfare.jpg",     projet = "", description = "Une fanfare et une foule dans une rue" },
   { image = "images/mosaique-4-jardiniere.jpg",  projet = "", description = "Une jardinière de tulipes et de jacinthes" },
-  { image = "images/mosaique-5-rue.jpg",         projet = "", description = "Un trottoir arboré bordé de commerces" },
-  { image = "images/mosaique-6-structure.jpg",   projet = "", description = "Une structure métallique bleue sur un toit" },
+  { image = "images/mosaique-5-rue.jpg",         projet = "The influence of urban form on how pedestrians perceive a public space", description = "Un trottoir arboré bordé de commerces" },
+  { image = "images/mosaique-6-structure.jpg",   projet = "Ingénierie des structures", description = "Une structure métallique bleue sur un toit" },
   { image = "images/mosaique-7-enfants.jpg",     projet = "", description = "Des enfants en gilets jaunes dans une rue piétonne" },
-  { image = "images/mosaique-8-chantier.jpg",    projet = "", description = "Une grue et une pièce de structure sur un chantier" },
-  { image = "images/mosaique-9-cour.jpg",        projet = "", description = "Un groupe dans une cour entre des bâtiments blancs" },
+  { image = "images/mosaique-8-chantier.jpg",    projet = "Ingénierie des structures", description = "Une grue et une pièce de structure sur un chantier" },
+  { image = "images/mosaique-9-cour.jpg",        projet = "Enquête sociologie urbaine - Ballon et genre dans la ville", description = "Un groupe dans une cour entre des bâtiments blancs" },
 ]
 
 
