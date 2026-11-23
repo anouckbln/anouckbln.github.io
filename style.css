@@ -11,6 +11,7 @@
   --texte-bulle: #0d1530; /* texte dans les bulles */
   --fond: #ffffff;        /* fond des pages de projets */
   --ligne: #d9deef;       /* traits de séparation légers */
+  --fond-image: #f3f5fb;  /* fond autour des images dans les cartes */
   --police: "Open Sans", Arial, sans-serif;
   --largeur: none;        /* largeur maximale du contenu (none = toute la largeur de l'écran, ou par exemple 1600px) */
   --colonne: 320px;       /* largeur minimale d'une carte projet : plus petit = plus de cartes par ligne */
@@ -290,20 +291,22 @@ main:not(:has(.theme:target)) .theme:first-of-type {
 }
 
 .carte-image {
-  aspect-ratio: 4 / 3;           /* même format pour toutes les cartes */
-  overflow: hidden;
-  background: var(--ligne);
+  aspect-ratio: 4 / 3;           /* même cadre pour toutes les cartes */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--fond-image);
   margin-bottom: 14px;
+  transition: opacity .2s;
 }
 
 .carte-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform .4s ease;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;           /* l'image entière, sans recadrage ni agrandissement */
 }
 
-.carte-lien:hover .carte-image img { transform: scale(1.04); }
+.carte-lien:hover .carte-image { opacity: .85; }
 
 .carte h3 {
   font-size: var(--taille-titre-projet);
