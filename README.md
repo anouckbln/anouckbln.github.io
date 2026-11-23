@@ -48,7 +48,7 @@ Chaque étiquette est cliquable : elle ouvre une page qui regroupe tous les proj
 
 ## Organisation du site
 
-- **Accueil** : la photo de couverture et sa légende (bloc `[accueil]` de `site.toml`).
+- **Accueil** : la mosaïque de 9 photos et sa légende (bloc `[accueil]` de `site.toml`). Les photos apparaissent une par une ; chacune peut mener à un projet (ligne `projet = "Nom du projet"`) ou, par défaut, à la page Projets. Les photos sont dans `images/`, nommées `mosaique-1-…` à `mosaique-9-…` : pour en changer une, remplace le fichier en gardant le nom, ou change le nom dans `site.toml`. Une photo carrée d'environ 700 px suffit.
 - **Projets** : tous les projets en cartes, dans l'ordre de la colonne **Ordre**. En haut, des boutons filtrent par domaine : « Adaptation au climat », « Mobilités », etc. Les étiquettes (colonne **Tags**) indiquent les compétences et méthodes.
 - **A propos** : ta présentation, sur fond bleu.
 - **CV** : ouvre ton CV en PDF.

@@ -461,15 +461,38 @@ def bulles_thematiques(thematiques):
             + "\n".join(bulles) + "\n    </ul>")
 
 
-def section_accueil(acc):
-    """La page d'accueil : la photo de couverture et sa légende."""
-    if not acc or not acc.get("image"):
+def section_accueil(acc, projets):
+    """La page d'accueil : la mosaïque de photos (ou une image unique) et sa légende."""
+    if not acc:
         return ""
-    src = texte(trouver_fichier(acc["image"], "l'image de couverture"))
     legende = f'\n    <p class="legende-accueil">{texte(acc["legende"])}</p>' if acc.get("legende") else ""
+    mosaique = acc.get("mosaique", [])
+
+    if mosaique:
+        par_nom = {identifiant(p["titre"]): p for p in projets}
+        tuiles = []
+        for i, photo in enumerate(mosaique):
+            src = texte(trouver_fichier(photo.get("image", ""), "une photo de la mosaïque"))
+            nom_projet = photo.get("projet", "")
+            p = par_nom.get(identifiant(nom_projet)) if nom_projet else None
+            if nom_projet and not p:
+                print(f"Attention : le projet « {nom_projet} » de la mosaïque est introuvable, "
+                      f"la photo mène à la page Projets.")
+            lien = f"#{ancre(p)}" if p else "#projets"
+            titre = p["titre"] if p else "Voir les projets"
+            alt = texte(photo.get("description", ""))
+            tuiles.append(f'      <a class="tuile" href="{lien}" title="{texte(titre)}" style="--i: {i}">'
+                          f'<img src="{src}" alt="{alt}"></a>')
+        visuel = '    <div class="mosaique">\n' + "\n".join(tuiles) + "\n    </div>"
+    elif acc.get("image"):
+        src = texte(trouver_fichier(acc["image"], "l'image de couverture"))
+        visuel = f'    <img class="image-couverture" src="{src}" alt="{texte(acc.get("legende", NOM))}">'
+    else:
+        return ""
+
     return f"""<section class="theme accueil" id="accueil">
   <div class="conteneur couverture">
-    <img src="{src}" alt="{texte(acc.get('legende', NOM))}">{legende}
+{visuel}{legende}
   </div>
 </section>"""
 
@@ -509,7 +532,7 @@ def construire_page(reglages, projets, pages):
     reglages_projets = reglages.get("projets", {})
     titre_projets = reglages_projets.get("titre", "Projets")
 
-    accueil = section_accueil(reglages.get("accueil", {}))
+    accueil = section_accueil(reglages.get("accueil", {}), projets)
     sections = [s for s in (accueil, section_a_propos(ap)) if s]
     page_depart = "#accueil" if accueil else "#projets"
 
