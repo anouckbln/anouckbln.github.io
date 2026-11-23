@@ -142,6 +142,30 @@ def lire_projets():
     return projets
 
 
+EXTENSIONS_IMAGES = [".jpg", ".jpeg", ".png", ".webp", ".gif"]
+
+
+def trouver_fichier(chemin, quoi="Le fichier"):
+    """Renvoie le chemin du fichier tel qu'il existe dans le dépôt.
+    Si « photo.jpg » n'existe pas mais « photo.png » ou « Photo.JPG » oui, on prend celui-là."""
+    chemin = chemin.strip().lstrip("/")
+    if (DOSSIER / chemin).is_file():
+        return chemin
+    cible = Path(chemin)
+    dossier = DOSSIER / cible.parent
+    if dossier.is_dir():
+        candidats = [f for f in dossier.iterdir() if f.is_file()]
+        for f in candidats:
+            if f.name.lower() == cible.name.lower():
+                return str(cible.parent / f.name)
+        if cible.suffix.lower() in EXTENSIONS_IMAGES:
+            for f in candidats:
+                if f.stem.lower() == cible.stem.lower() and f.suffix.lower() in EXTENSIONS_IMAGES:
+                    return str(cible.parent / f.name)
+    print(f"Attention : {quoi} « {chemin} » est introuvable.")
+    return chemin
+
+
 def noms_images(valeur):
     """Accepte « a.jpg, b.jpg » ou les chemins d'une colonne Fichiers de Notion."""
     noms = []
@@ -204,9 +228,7 @@ def bloc_projet(p, tag_actif=None):
     if images:
         lignes = []
         for nom in images:
-            if not (DOSSIER / "images" / nom).exists():
-                print(f"Attention : image « {nom} » introuvable dans images/ (projet « {p['titre']} »).")
-            chemin = "images/" + texte(nom)
+            chemin = texte(trouver_fichier("images/" + nom, f"l'image du projet « {p['titre']} »,"))
             lignes.append(f'          <a href="{chemin}" target="_blank">'
                           f'<img src="{chemin}" alt="{texte(p["titre"])}" loading="lazy"></a>')
         m.append('        <div class="images">\n' + "\n".join(lignes) + "\n        </div>")
@@ -228,15 +250,13 @@ def section_a_propos(ap):
         l = texte(ap["linkedin"])
         contact.append(f'<p><a href="{l}" target="_blank">{l}</a></p>')
     if ap.get("cv"):
-        if not (DOSSIER / ap["cv"]).exists():
-            print(f"Attention : le CV « {ap['cv']} » est introuvable.")
-        contact.append(f'<p class="lien-cv"><a href="{texte(ap["cv"])}" target="_blank">Voir mon CV</a></p>')
+        cv = texte(trouver_fichier(ap["cv"], "le CV"))
+        contact.append(f'<p class="lien-cv"><a href="{cv}" target="_blank">Voir mon CV</a></p>')
 
     photo = ""
     if ap.get("photo"):
-        if not (DOSSIER / ap["photo"]).exists():
-            print(f"Attention : la photo « {ap['photo']} » est introuvable.")
-        photo = f'<img class="photo" src="{texte(ap["photo"])}" alt="{texte(NOM)}">'
+        src = texte(trouver_fichier(ap["photo"], "la photo"))
+        photo = f'<img class="photo" src="{src}" alt="{texte(NOM)}">'
 
     return f"""<section class="theme a-propos" id="a-propos">
   <div class="conteneur">
@@ -250,6 +270,19 @@ def section_a_propos(ap):
     <div class="texte-a-propos">
 {paragraphes(ap.get('texte', ''))}
     </div>
+  </div>
+</section>"""
+
+
+def section_accueil(acc):
+    """La page d'accueil : la photo de couverture et sa légende."""
+    if not acc or not acc.get("image"):
+        return ""
+    src = texte(trouver_fichier(acc["image"], "l'image de couverture"))
+    legende = f'\n    <p class="legende-accueil">{texte(acc["legende"])}</p>' if acc.get("legende") else ""
+    return f"""<section class="theme accueil" id="accueil">
+  <div class="conteneur couverture">
+    <img src="{src}" alt="{texte(acc.get('legende', NOM))}">{legende}
   </div>
 </section>"""
 
@@ -285,7 +318,9 @@ def construire_page(reglages, projets):
     menu += [f'      <a href="#{identifiant(c["nom"])}">{texte(c.get("onglet", c["nom"]))}</a>'
              for c in categories]
 
-    sections = [section_a_propos(ap)] if ap else []
+    accueil = section_accueil(reglages.get("accueil", {}))
+    sections = [s for s in (accueil, section_a_propos(ap)) if s]
+    page_depart = "#accueil" if accueil else "#a-propos"
     for c in categories:
         blocs = [bloc_projet(p) for p in projets if c["nom"] in categories_de(p)]
         sections.append(f"""<section class="theme" id="{identifiant(c['nom'])}">
@@ -343,7 +378,7 @@ def construire_page(reglages, projets):
 
 <header class="entete">
   <div class="conteneur">
-    <a class="nom" href="#a-propos">{texte(NOM)}</a>
+    <a class="nom" href="{page_depart}">{texte(NOM)}</a>
     <nav class="menu">
 {chr(10).join(menu)}
     </nav>
@@ -366,7 +401,7 @@ def construire_page(reglages, projets):
   // Souligne l'élément du menu correspondant à la page ouverte
   function marquerMenu() {{
     var liens = document.querySelectorAll('.menu a');
-    var actif = location.hash || liens[0].getAttribute('href');
+    var actif = location.hash || '{page_depart}';
     liens.forEach(function (lien) {{
       lien.classList.toggle('actif', lien.getAttribute('href') === actif);
     }});

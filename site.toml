@@ -12,8 +12,16 @@ nom = "Anouck Blouin"
 titre = "Anouck Blouin - Portfolio"
 
 
+# ---------- Page d'accueil ----------
+# Affichée à l'arrivée sur le site et quand on clique sur ton nom.
+# Pour ne pas avoir de page d'accueil, mets image = "".
+
+[accueil]
+image = "images/couverture.png"
+legende = "La ville sous toutes ses formes"
+
+
 # ---------- Page « A propos » ----------
-# C'est la page affichée à l'arrivée sur le site.
 # Pour ne pas afficher un élément, mets "" (par exemple telephone = "").
 
 [a_propos]
