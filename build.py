@@ -654,9 +654,6 @@ def construire_page(reglages, projets, pages):
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{texte(site.get('titre', NOM or 'Portfolio'))}</title>
   <meta name="description" content="{description}">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap">
   <!-- Icônes (LinkedIn) : Font Awesome Free, fichiers dans le dossier icones/ -->
   <link rel="stylesheet" href="icones/css/fontawesome.min.css">
   <link rel="stylesheet" href="icones/css/brands.min.css">
@@ -724,7 +721,7 @@ def main():
     (SORTIE / "index.html").write_text(page, encoding="utf-8")
     shutil.copy(DOSSIER / "style.css", SORTIE / "style.css")
     shutil.copytree(DOSSIER / "images", SORTIE / "images")
-    for dossier in ("documents", "icones"):
+    for dossier in ("documents", "icones", "polices"):
         if (DOSSIER / dossier).exists():
             shutil.copytree(DOSSIER / dossier, SORTIE / dossier)
     for publie, source in MEDIAS.items():

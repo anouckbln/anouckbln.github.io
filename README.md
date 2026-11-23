@@ -122,7 +122,7 @@ Les étiquettes sont saumon. Pour en colorer certaines autrement, ajoute une lig
 
 ## Changer l'apparence
 
-Ouvre `style.css` : les couleurs, la police (Archivo, chargée depuis Google Fonts), les largeurs et les tailles de texte se règlent dans les premières lignes (`--bleu`, `--tag`, `--largeur`, `--colonne`, `--taille-texte`, `--taille-titre-page`…). Les tailles suivent une échelle régulière à partir de 16 px : pour garder un ensemble harmonieux, change-les toutes dans la même proportion. `--colonne` est la largeur minimale d'un bloc projet : plus elle est petite, plus il y a de projets par ligne.
+Ouvre `style.css` : les couleurs, la police (Hanken Grotesk, gratuite et open source, fichiers dans `polices/`), les largeurs et les tailles de texte se règlent dans les premières lignes (`--bleu`, `--tag`, `--largeur`, `--colonne`, `--taille-texte`, `--taille-titre-page`…). Les tailles suivent une échelle régulière à partir de 16 px : pour garder un ensemble harmonieux, change-les toutes dans la même proportion. `--colonne` est la largeur minimale d'un bloc projet : plus elle est petite, plus il y a de projets par ligne.
 
 ## Si le site ne se met pas à jour
 
