@@ -17,6 +17,7 @@ titre = "Anouck Blouin - Portfolio"
 # Pour ne pas avoir de page d'accueil, mets image = "".
 
 [accueil]
+onglet = "Accueil"       # texte du lien dans le menu
 image = "images/couverture.png"
 legende = "La ville sous toutes ses formes"
 

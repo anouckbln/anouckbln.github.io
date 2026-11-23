@@ -487,17 +487,22 @@ def construire_page(reglages, projets, pages):
     reglages_projets = reglages.get("projets", {})
     titre_projets = reglages_projets.get("titre", "Projets")
 
-    # Menu : Projets, A propos, CV
-    menu = [f'      <a href="#projets">{texte(titre_projets)}</a>']
+    accueil = section_accueil(reglages.get("accueil", {}))
+    sections = [s for s in (accueil, section_a_propos(ap)) if s]
+    page_depart = "#accueil" if accueil else "#projets"
+
+    # Menu : Accueil, Projets, A propos, CV
+    menu = []
+    if accueil:
+        menu.append(f'      <a href="#accueil">{texte(reglages.get("accueil", {}).get("onglet", "Accueil"))}</a>')
+    menu.append(f'      <a href="#projets">{texte(titre_projets)}</a>')
     if ap:
         menu.append(f'      <a href="#a-propos">{texte(ap.get("onglet", "A propos"))}</a>')
     if ap.get("cv") and reglages_projets.get("cv_dans_menu", True):
         cv = texte(trouver_fichier(ap["cv"], "le CV"))
         menu.append(f'      <a href="{cv}" target="_blank">CV</a>')
 
-    accueil = section_accueil(reglages.get("accueil", {}))
-    sections = [s for s in (accueil, section_a_propos(ap)) if s]
-    page_depart = "#accueil" if accueil else "#projets"
+
 
     # Page « Projets » : toutes les cartes, et les axes (catégories) comme filtres.
     # Chaque filtre est une page à part (#axe-…), qui ne montre que les projets de cet axe.
