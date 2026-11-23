@@ -481,7 +481,15 @@ main:not(:has(.theme:target)) .theme:first-of-type {
 .detail-texte .collab { font-size: var(--taille-meta); font-style: italic; color: var(--bleu-doux); margin-top: 28px; }
 .detail-texte .lien { font-weight: 500; text-underline-offset: 4px; }
 
-.detail-images { display: grid; gap: 28px; }
+/* Images d'un projet : deux par ligne. Avec un nombre impair d'images,
+   la première prend toute la largeur. */
+.detail-images {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px 24px;
+  align-items: start;
+}
+.detail-images figure:first-child:nth-last-child(odd) { grid-column: 1 / -1; }
 .detail-images img { width: auto; max-width: 100%; }   /* jamais agrandie, pour rester nette */
 .detail-images figure { margin: 0; }
 .detail-images figcaption {
@@ -512,6 +520,10 @@ footer a { color: var(--bleu-doux); }
 
 @media (max-width: 900px) {
   .detail { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .detail-images { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 600px) {
