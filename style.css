@@ -211,6 +211,13 @@ main:not(:has(.theme:target)) .theme:first-of-type {
   color: var(--fond);
 }
 
+.intro-projets {
+  font-size: var(--taille-moyenne);
+  font-style: italic;
+  max-width: var(--largeur-texte);
+  margin: -16px 0 28px;
+}
+
 .intro-axe {
   font-size: var(--taille-moyenne);
   font-style: italic;

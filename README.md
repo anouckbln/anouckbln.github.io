@@ -32,7 +32,7 @@ Colonnes reconnues (le nom compte, pas l'ordre ; majuscules et accents ignorés)
 | **Description** | Texte | Texte de la page du projet, si la page Notion est vide ; une ligne vide = un nouveau paragraphe |
 | **Tags** | Sélection multiple | Étiquettes saumon sous le titre, cliquables |
 | **thèmes** | Sélection multiple | Non affichés (voir `afficher_themes` dans `site.toml`) |
-| **Catégorie** | Sélection multiple | Axes du projet : les filtres de la page Projets (un projet peut en avoir plusieurs) |
+| **Catégorie** | Sélection multiple | Domaines du projet : les filtres de la page Projets (un projet peut en avoir plusieurs) |
 | **Images** | Texte | Noms des fichiers du dossier `images/`, séparés par des virgules |
 | **Lien** | URL | Lien sous la description |
 | **Texte du lien** | Texte | Texte de ce lien (« Voir le projet » par défaut) |
@@ -49,7 +49,7 @@ Chaque étiquette est cliquable : elle ouvre une page qui regroupe tous les proj
 ## Organisation du site
 
 - **Accueil** : la photo de couverture et sa légende (bloc `[accueil]` de `site.toml`).
-- **Projets** : tous les projets en cartes, dans l'ordre de la colonne **Ordre**. En haut, des boutons filtrent par axe : « Observer et diagnostiquer », « Aménager », etc.
+- **Projets** : tous les projets en cartes, dans l'ordre de la colonne **Ordre**. En haut, des boutons filtrent par domaine : « Adaptation au climat », « Mobilités », etc. Les étiquettes (colonne **Tags**) indiquent les compétences et méthodes.
 - **A propos** : ta présentation, sur fond bleu.
 - **CV** : ouvre ton CV en PDF.
 
@@ -90,7 +90,7 @@ Tout est dans le bloc `[a_propos]` de `site.toml` : texte, téléphone, email, L
 
 Pour mettre à jour ton CV, dépose le nouveau PDF dans `documents/` avec le même nom, `CV_Anouck_Blouin.pdf`. Il remplace l'ancien.
 
-## Ajouter ou renommer un axe (filtre)
+## Ajouter ou renommer un domaine (filtre)
 
 1. Dans `site.toml`, ajoute ou modifie un bloc :
 

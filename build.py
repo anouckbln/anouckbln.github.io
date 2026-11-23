@@ -537,9 +537,11 @@ def construire_page(reglages, projets, pages):
                            f'{texte(c.get("onglet", c["nom"]))}</a>')
         return '    <nav class="filtres" aria-label="Filtrer les projets">' + "".join(boutons) + "</nav>"
 
+    intro_projets = (f'\n    <p class="intro-projets">{texte(reglages_projets["intro"])}</p>'
+                     if reglages_projets.get("intro") else "")
     sections.append(f"""<section class="theme" id="projets">
   <div class="conteneur">
-    <h2>{texte(titre_projets)}</h2>
+    <h2>{texte(titre_projets)}</h2>{intro_projets}
 {barre_filtres(None)}
 {grille([carte_projet(p) for p in projets])}
   </div>
@@ -549,7 +551,7 @@ def construire_page(reglages, projets, pages):
         intro = f'\n    <p class="intro-axe">{texte(c["titre"])}</p>' if c.get("titre") else ""
         sections.append(f"""<section class="theme" id="axe-{identifiant(c['nom'])}">
   <div class="conteneur">
-    <h2>{texte(titre_projets)}</h2>
+    <h2>{texte(titre_projets)}</h2>{intro_projets}
 {barre_filtres(c["nom"])}{intro}
 {grille(cartes)}
   </div>
