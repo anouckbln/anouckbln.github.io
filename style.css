@@ -483,6 +483,14 @@ main:not(:has(.theme:target)) .theme:first-of-type {
 
 .detail-images { display: grid; gap: 28px; }
 .detail-images img { width: auto; max-width: 100%; }   /* jamais agrandie, pour rester nette */
+.detail-images figure { margin: 0; }
+.detail-images figcaption {
+  font-size: var(--taille-meta);
+  color: var(--bleu-doux);
+  line-height: 1.45;
+  margin-top: 8px;
+  max-width: 60ch;
+}
 .detail-images a:hover img { opacity: .9; }
 
 /* ---------- Pied de page ---------- */

@@ -42,6 +42,7 @@ COLONNES = {
     "themes":        ["themes", "theme"],
     "categorie":     ["categorie", "categories", "onglet"],
     "images":        ["images", "image"],
+    "legendes":      ["legendes", "legende", "legendes des images"],
     "lien":          ["lien", "url"],
     "texte_lien":    ["texte du lien"],
     "brouillon":     ["brouillon", "masquer"],
@@ -439,9 +440,17 @@ def page_projet(p, pages):
         libelle = p.get("texte_lien") or "Voir le projet"
         extra.append(f'<p><a class="lien" href="{texte(p["lien"])}" target="_blank">{texte(libelle)} →</a></p>')
 
-    images = "\n".join(
-        f'        <a href="{texte(i)}" target="_blank"><img src="{texte(i)}" alt="{texte(p["titre"])}" loading="lazy"></a>'
-        for i in images_de(p))
+    # Colonne « Légendes » : une ligne par image, dans le même ordre que la colonne Images
+    legendes = p.get("legendes", "").replace("\r", "").split("\n")
+    figures = []
+    for n, i in enumerate(images_de(p)):
+        legende = legendes[n].strip() if n < len(legendes) else ""
+        alt = texte(legende or p["titre"])
+        fig = f'<a href="{texte(i)}" target="_blank"><img src="{texte(i)}" alt="{alt}" loading="lazy"></a>'
+        if legende:
+            fig += f"<figcaption>{texte(legende)}</figcaption>"
+        figures.append(f"        <figure>{fig}</figure>")
+    images = "\n".join(figures)
     st = sous_titre(p)
     return f"""<section class="theme page-projet" id="{ancre(p)}">
   <div class="conteneur">
