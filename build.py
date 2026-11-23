@@ -424,19 +424,41 @@ def section_a_propos(ap):
         photo = f'<img class="photo" src="{src}" alt="{texte(NOM)}">'
 
     return f"""<section class="theme a-propos" id="a-propos">
-  <div class="conteneur">
-    <h2>{texte(ap.get('titre', ap.get('onglet', 'A propos')))}</h2>
-    <div class="carte-visite">
-      {photo}
-      <div class="contact">
-        {(chr(10) + '        ').join(contact)}
+  <div class="conteneur colonnes-a-propos">
+    <div>
+      <h2>{texte(ap.get('titre', ap.get('onglet', 'A propos')))}</h2>
+      <div class="carte-visite">
+        {photo}
+        <div class="contact">
+          {(chr(10) + '          ').join(contact)}
+        </div>
+      </div>
+      <div class="texte-a-propos">
+{paragraphes(ap.get('texte', ''))}
       </div>
     </div>
-    <div class="texte-a-propos">
-{paragraphes(ap.get('texte', ''))}
-    </div>
+{bulles_thematiques(ap.get('thematiques', []))}
   </div>
 </section>"""
+
+
+# Positions des bulles (en % de la largeur) : un nuage en zigzag, comme sur la maquette
+POSITIONS_BULLES = [34, 60, 8, 52, 0, 30, 62, 14, 46, 4]
+
+
+def bulles_thematiques(thematiques):
+    """Le schéma de bulles avec les thématiques, à droite de la page « A propos »."""
+    if not thematiques:
+        return ""
+    pas = 94   # écart vertical entre deux bulles, en pixels
+    bulles = []
+    for i, nom in enumerate(thematiques):
+        gauche = POSITIONS_BULLES[i % len(POSITIONS_BULLES)]
+        bulles.append(f'      <li class="bulle" style="--x: {gauche}%; --y: {i * pas}px">'
+                      f'<span>{texte(nom)}</span></li>')
+    hauteur = (len(thematiques) - 1) * pas + 140
+    return (f'    <ul class="thematiques" style="--hauteur: {hauteur}px" aria-label="Mes thématiques">\n'
+            + "\n".join(bulles) + "\n    </ul>")
 
 
 def section_accueil(acc):

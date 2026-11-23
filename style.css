@@ -7,6 +7,8 @@
 :root {
   --bleu: #0a27a8;        /* couleur principale (titres, textes, fond « A propos ») */
   --tag: #f08a6c;         /* couleur des étiquettes (tags) */
+  --bulle: #2bb5a5;       /* couleur des bulles de thématiques (page « A propos ») */
+  --texte-bulle: #0d1530; /* texte dans les bulles */
   --fond: #ffffff;        /* fond des pages de projets */
   --ligne: #d9deef;       /* traits de séparation légers */
   --police: "Open Sans", Arial, sans-serif;
@@ -214,6 +216,56 @@ main:not(:has(.theme:target)) .theme:first-of-type {
   font-style: italic;
   max-width: var(--largeur-texte);
   margin: -16px 0 36px;
+}
+
+/* ---------- Page « A propos » : texte à gauche, bulles de thématiques à droite ---------- */
+.colonnes-a-propos {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+  gap: 40px 64px;
+  align-items: center;
+}
+
+.thematiques {
+  position: relative;
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  width: 100%;
+  max-width: 380px;
+  height: var(--hauteur);
+}
+
+.bulle {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 132px;
+  height: 132px;
+  border-radius: 50%;
+  background: var(--bulle);
+  color: var(--texte-bulle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 14px;
+  font-size: 14px;
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1.25;
+  hyphens: none;
+  overflow-wrap: normal;
+}
+
+@media (max-width: 1000px) {
+  .colonnes-a-propos { grid-template-columns: 1fr; }
+}
+
+/* Sur petit écran, les bulles se rangent simplement côte à côte */
+@media (max-width: 600px) {
+  .thematiques { height: auto; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .bulle { position: static; width: 118px; height: 118px; font-size: 12.5px; padding: 8px; }
 }
 
 /* ---------- Grille de cartes ---------- */

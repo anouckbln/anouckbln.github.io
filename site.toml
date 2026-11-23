@@ -32,6 +32,15 @@ telephone = "+33 6 10 43 35 26"
 email = "anouck.blouin@yahoo.fr"
 linkedin = "https://www.linkedin.com/in/anouck-blouin-3b9436202/"
 cv = "documents/CV_Anouck_Blouin.pdf"
+# Les bulles du schéma à droite du texte (mets thematiques = [] pour ne pas l'afficher)
+thematiques = [
+  "Formes urbaines",
+  "Marchabilité",
+  "Aménagements pour la mobilité douce",
+  "Urbanisme favorable à la santé",
+  "Gestion des eaux",
+  "Réduction des îlots de chaleur",
+]
 texte = """
 Ingénieure diplômée de l'EPFL en génie civil, climat et transformation des territoires, je souhaite agir pour l'aménagement de territoires durables. Au cœur de mes préoccupations : l'adaptation des territoires au changement climatique, mais aussi la transformation des villes au service du bien-être et de la santé des habitant·es. Une transformation juste et durable des territoires nécessite de prendre en compte les inégalités sociales, environnementales et d'accès aux services, notamment de santé.
 

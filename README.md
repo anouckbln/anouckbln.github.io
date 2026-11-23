@@ -86,7 +86,7 @@ Conseil : garde des images de moins de 500 Ko (1600 px de large suffisent). Pour
 
 ## Modifier la page « A propos »
 
-Tout est dans le bloc `[a_propos]` de `site.toml` : texte, téléphone, email, LinkedIn, photo et CV. Pour ne pas afficher un élément, remplace sa valeur par `""`.
+Tout est dans le bloc `[a_propos]` de `site.toml` : texte, téléphone, email, LinkedIn, photo, CV et les bulles de thématiques (liste `thematiques`). La couleur des bulles se règle avec `--bulle` en haut de `style.css`. Pour ne pas afficher un élément, remplace sa valeur par `""`.
 
 Pour mettre à jour ton CV, dépose le nouveau PDF dans `documents/` avec le même nom, `CV_Anouck_Blouin.pdf`. Il remplace l'ancien.
 
