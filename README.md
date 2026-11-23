@@ -26,8 +26,10 @@ Colonnes reconnues (le nom compte, pas l'ordre ; majuscules et accents ignorés)
 | Colonne Notion | Type conseillé | Ce qu'elle devient sur le site |
 |---|---|---|
 | **Nom** | Titre | Titre du projet |
-| **Entreprise** | Sélection | Ajoutée après le titre : « Titre - Entreprise ». Laisse vide si le titre la contient déjà |
-| **Description** | Texte | Texte du projet ; une ligne vide = un nouveau paragraphe |
+| **Résumé** | Texte | La phrase affichée sur la carte du projet |
+| **Année** | Texte | Affichée à côté de l'entreprise (par exemple « 2025 » ou « 2024–2025 ») |
+| **Entreprise** | Sélection | Sous le titre (EPFL, Action Située…) |
+| **Description** | Texte | Texte de la page du projet, si la page Notion est vide ; une ligne vide = un nouveau paragraphe |
 | **Tags** | Sélection multiple | Étiquettes saumon sous le titre, cliquables |
 | **thèmes** | Sélection multiple | Non affichés (voir `afficher_themes` dans `site.toml`) |
 | **Catégorie** | Sélection | Page où le projet apparaît |
@@ -44,11 +46,26 @@ Les options de **Catégorie** doivent être écrites exactement comme les `nom` 
 
 Chaque étiquette est cliquable : elle ouvre une page qui regroupe tous les projets portant cette étiquette, quelle que soit leur catégorie. Ces pages sont créées automatiquement. Pour regrouper des projets, il suffit de leur donner la même étiquette, écrite exactement pareil.
 
+## Cartes et pages de projet
+
+Sur chaque page de catégorie, un projet apparaît sous forme de **carte** : sa première image, son titre, l'entreprise et l'année, le résumé et les étiquettes. Un clic sur la carte ouvre la **page du projet**.
+
+Le texte de la page du projet s'écrit **dans la page Notion du projet** : ouvre la ligne du projet dans Notion comme un document, et écris en dessous des propriétés. Utilise des intertitres (`/titre 2` dans Notion) pour structurer, par exemple :
+
+- **Contexte** : quel problème, pour qui, où ;
+- **Mon rôle** : ce que tu as fait toi-même, et avec qui ;
+- **Méthode** : données, outils, ateliers, enquêtes ;
+- **Résultats** : ce que ça a produit ou permis de décider.
+
+Les listes à puces, le gras, l'italique, les liens et les images collées dans la page sont repris sur le site. Si la page Notion est vide, le site utilise la colonne **Description**.
+
+Le dossier `donnees/pages/` contient une première version de ces textes, un fichier par projet. Copie le contenu de chaque fichier dans la page Notion correspondante : Notion le met en forme tout seul. Une fois tes pages remplies et exportées, les textes de Notion remplacent ces brouillons.
+
 ## Mettre le site à jour après une modification dans Notion
 
 1. Dans Notion, ouvre la base Portfolio, clique sur **•••** en haut à droite, puis **Exporter**.
 2. Choisis **Markdown & CSV**, puis **Exporter**. Dézippe le fichier téléchargé.
-3. Sur GitHub, ouvre le dossier `donnees/`, clique sur **Add file › Upload files**, glisse les fichiers `.csv` et valide avec **Commit changes**.
+3. Sur GitHub, ouvre le dossier `donnees/`, clique sur **Add file › Upload files**, glisse **tout le contenu** du dossier exporté (les fichiers `.csv` et le dossier qui contient les pages des projets) et valide avec **Commit changes**.
 
 Les fichiers exportés ont toujours le même nom : ils remplacent les anciens. Le site est en ligne une à deux minutes plus tard.
 

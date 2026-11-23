@@ -4,9 +4,10 @@ Génère le site du portfolio à partir de l'export Notion.
     python build.py
 
 Lit :
-  - site.toml            : page « A propos », menu, couleurs des étiquettes ;
-  - donnees/*.csv        : l'export CSV de la base Notion « Portfolio ».
-Crée le site dans le dossier _site/ (index.html, style.css, images/, documents/).
+  - site.toml            : accueil, page « A propos », menu, couleurs des étiquettes ;
+  - donnees/*.csv        : l'export CSV de la base Notion « Portfolio » ;
+  - donnees/**/*.md      : le texte écrit dans chaque page de projet Notion (facultatif).
+Crée le site dans le dossier _site/.
 
 Sur GitHub, ce script est lancé automatiquement à chaque modification :
 il n'y a normalement pas besoin d'y toucher.
@@ -15,6 +16,7 @@ Nécessite Python 3.11 ou plus récent, sans aucune installation.
 
 import csv
 import html
+import json
 import re
 import shutil
 import sys
@@ -44,6 +46,8 @@ COLONNES = {
     "texte_lien":    ["texte du lien"],
     "brouillon":     ["brouillon", "masquer"],
     "ordre":         ["ordre"],
+    "resume":        ["resume", "resume court", "accroche"],
+    "annee":         ["annee", "date", "periode"],
 }
 
 
@@ -177,13 +181,127 @@ def noms_images(valeur):
 
 
 # ---------------------------------------------------------------
+# Pages détaillées : textes écrits dans les pages Notion
+# ---------------------------------------------------------------
+# L'export « Markdown & CSV » de Notion contient, à côté du CSV, un fichier .md
+# par projet avec le texte écrit dans la page du projet. On les cherche dans
+# tout le dossier donnees/ et on les associe aux projets par leur titre.
+
+ID_NOTION = re.compile(r"\s+[0-9a-f]{32}$")
+PROPRIETE = re.compile(r"^[^:\n]{1,60}:\s")
+
+
+def lire_pages_notion():
+    pages = {}
+    for f in sorted((DOSSIER / "donnees").rglob("*.md")):
+        lignes = f.read_text(encoding="utf-8-sig").replace("\r", "").split("\n")
+        titre = ID_NOTION.sub("", f.stem)
+        # Première ligne « # Titre »
+        if lignes and lignes[0].startswith("# "):
+            titre = lignes[0][2:].strip()
+            lignes = lignes[1:]
+        while lignes and not lignes[0].strip():
+            lignes = lignes[1:]
+        # Notion recopie ensuite les propriétés (« Tags: … ») : on les saute
+        if lignes and PROPRIETE.match(lignes[0]):
+            while lignes and lignes[0].strip():
+                lignes = lignes[1:]
+        corps = "\n".join(lignes).strip()
+        if not corps:
+            continue
+        cle = identifiant(titre)
+        # Un fichier exporté par Notion (avec son identifiant) passe avant un brouillon
+        if cle in pages and not ID_NOTION.search(f.stem):
+            continue
+        pages[cle] = (corps, f)
+    return pages
+
+
+MEDIAS = {}   # fichiers d'images trouvés à côté des pages Notion -> chemin publié
+
+
+def resoudre_image(src, fichier_md):
+    """Image d'une page Notion : à côté du fichier .md, ou dans images/."""
+    if re.match(r"^https?://", src):
+        return src
+    src = unquote(src.split("?")[0])
+    voisin = (fichier_md.parent / src)
+    if voisin.is_file():
+        publie = f"medias/{identifiant(fichier_md.stem)}/{voisin.name}"
+        MEDIAS[publie] = voisin
+        return publie
+    return trouver_fichier("images/" + Path(src).name, "une image de page")
+
+
+def en_ligne(t, fichier_md):
+    """Gras, italique et liens à l'intérieur d'une ligne."""
+    t = texte(t)
+    t = re.sub(r"\[([^\]]+)\]\(([^)\s]+)\)",
+               lambda m: f'<a href="{m.group(2)}" target="_blank">{m.group(1)}</a>', t)
+    t = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t)
+    t = re.sub(r"(?<![\w*])[*_](?!\s)(.+?)(?<!\s)[*_](?![\w*])", r"<em>\1</em>", t)
+    return t
+
+
+def markdown_vers_html(corps, fichier_md):
+    """Convertit le texte d'une page Notion (titres, paragraphes, listes, images)."""
+    sortie, paragraphe, liste_ouverte = [], [], None
+
+    def fermer():
+        nonlocal paragraphe, liste_ouverte
+        if paragraphe:
+            sortie.append(f"<p>{en_ligne(' '.join(paragraphe), fichier_md)}</p>")
+            paragraphe = []
+        if liste_ouverte:
+            sortie.append(f"</{liste_ouverte}>")
+            liste_ouverte = None
+
+    for ligne in corps.split("\n"):
+        brut = ligne.strip()
+        image = re.match(r"^!\[([^\]]*)\]\(([^)]+)\)$", brut)
+        puce = re.match(r"^[-*+]\s+(.*)$", brut)
+        numero = re.match(r"^\d+[.)]\s+(.*)$", brut)
+        titre = re.match(r"^(#{1,6})\s+(.*)$", brut)
+        if not brut:
+            fermer()
+        elif titre:
+            fermer()
+            sortie.append(f"<h3>{en_ligne(titre.group(2), fichier_md)}</h3>")
+        elif image:
+            fermer()
+            src = texte(resoudre_image(image.group(2), fichier_md))
+            alt = texte(image.group(1))
+            sortie.append(f'<figure><a href="{src}" target="_blank"><img src="{src}" alt="{alt}" loading="lazy"></a>'
+                          + (f"<figcaption>{alt}</figcaption>" if alt and not alt.lower().endswith(tuple(EXTENSIONS_IMAGES)) else "")
+                          + "</figure>")
+        elif puce or numero:
+            balise = "ul" if puce else "ol"
+            if paragraphe:
+                sortie.append(f"<p>{en_ligne(' '.join(paragraphe), fichier_md)}</p>")
+                paragraphe = []
+            if liste_ouverte != balise:
+                if liste_ouverte:
+                    sortie.append(f"</{liste_ouverte}>")
+                sortie.append(f"<{balise}>")
+                liste_ouverte = balise
+            sortie.append(f"<li>{en_ligne((puce or numero).group(1), fichier_md)}</li>")
+        else:
+            if liste_ouverte:
+                sortie.append(f"</{liste_ouverte}>")
+                liste_ouverte = None
+            paragraphe.append(brut)
+    fermer()
+    return "\n".join(sortie)
+
+
+# ---------------------------------------------------------------
 # Construction de la page
 # ---------------------------------------------------------------
 
 COULEURS_TAGS = {}
 
 
-def lien_tag(nom, tag_actif):
+def lien_tag(nom, tag_actif=None):
     """Une étiquette cliquable qui ouvre la page regroupant les projets de ce tag."""
     actif = " actif" if tag_actif and identifiant(nom) == identifiant(tag_actif) else ""
     couleur = COULEURS_TAGS.get(identifiant(nom))
@@ -199,41 +317,88 @@ def etiquettes_de(p):
     return tags
 
 
-def titre_complet(p):
-    """« Titre - Cadre », comme sur la maquette."""
-    titre, cadre = p["titre"].strip(), p.get("cadre", "").strip()
-    if cadre and not titre.endswith(cadre):
-        return f"{titre} - {cadre}"
-    return titre
+def bloc_tags(p, tag_actif=None):
+    tags = [lien_tag(t, tag_actif) for t in etiquettes_de(p)]
+    return f'<div class="tags">{"".join(tags)}</div>' if tags else ""
 
 
-def bloc_projet(p, tag_actif=None):
-    m = [f"        <h3>{texte(titre_complet(p))}</h3>"]
+def sous_titre(p):
+    """« EPFL · 2024 »"""
+    morceaux = [p.get("cadre", ""), p.get("annee", "")]
+    return " · ".join(texte(m) for m in morceaux if m.strip())
 
-    etiquettes = [lien_tag(t, tag_actif) for t in etiquettes_de(p)]
-    if etiquettes:
-        m.append(f'        <div class="tags">{"".join(etiquettes)}</div>')
 
-    if p.get("description"):
-        m.append(paragraphes(p["description"]))
+def resume(p):
+    """La phrase de la carte : colonne Résumé, sinon la première phrase de la description."""
+    if p.get("resume"):
+        return p["resume"]
+    desc = " ".join(p.get("description", "").split())
+    phrase = re.split(r"(?<=[.!?])\s", desc, maxsplit=1)[0]
+    return phrase if len(phrase) <= 220 else phrase[:217].rsplit(" ", 1)[0] + "…"
 
+
+def images_de(p):
+    return [trouver_fichier("images/" + nom, f"l'image du projet « {p['titre']} »,")
+            for nom in noms_images(p.get("images"))]
+
+
+def ancre(p):
+    return "projet-" + identifiant(p["titre"])
+
+
+def carte_projet(p, tag_actif=None):
+    """La carte d'un projet dans une page de catégorie ou d'étiquette."""
+    images = images_de(p)
+    image = (f'<div class="carte-image"><img src="{texte(images[0])}" alt="" loading="lazy"></div>'
+             if images else '<div class="carte-image vide"></div>')
+    st = sous_titre(p)
+    return f"""      <article class="carte">
+        <a class="carte-lien" href="#{ancre(p)}">
+          {image}
+          <h3>{texte(p['titre'])}</h3>
+          {f'<p class="sous-titre">{st}</p>' if st else ''}
+          <p class="resume">{texte(resume(p))}</p>
+        </a>
+        {bloc_tags(p, tag_actif)}
+      </article>"""
+
+
+def page_projet(p, pages):
+    """La page détaillée d'un projet."""
+    corps = pages.get(identifiant(p["titre"]))
+    if corps:
+        texte_page = markdown_vers_html(*corps)
+    else:
+        texte_page = paragraphes(p.get("description", ""))
+
+    extra = []
     if p.get("collaboration"):
-        m.append(f'        <p class="collab">{texte(PREFIXE_COLLAB)} {texte(p["collaboration"])}</p>')
-
+        extra.append(f'<p class="collab">{texte(PREFIXE_COLLAB)} {texte(p["collaboration"])}</p>')
     if p.get("lien"):
         libelle = p.get("texte_lien") or "Voir le projet"
-        m.append(f'        <p><a class="lien" href="{texte(p["lien"])}" target="_blank">{texte(libelle)} →</a></p>')
+        extra.append(f'<p><a class="lien" href="{texte(p["lien"])}" target="_blank">{texte(libelle)} →</a></p>')
 
-    images = noms_images(p.get("images"))
-    if images:
-        lignes = []
-        for nom in images:
-            chemin = texte(trouver_fichier("images/" + nom, f"l'image du projet « {p['titre']} »,"))
-            lignes.append(f'          <a href="{chemin}" target="_blank">'
-                          f'<img src="{chemin}" alt="{texte(p["titre"])}" loading="lazy"></a>')
-        m.append('        <div class="images">\n' + "\n".join(lignes) + "\n        </div>")
-
-    return '      <article class="projet">\n' + "\n".join(m) + "\n      </article>"
+    images = "\n".join(
+        f'        <a href="{texte(i)}" target="_blank"><img src="{texte(i)}" alt="{texte(p["titre"])}" loading="lazy"></a>'
+        for i in images_de(p))
+    st = sous_titre(p)
+    return f"""<section class="theme page-projet" id="{ancre(p)}">
+  <div class="conteneur">
+    <p class="retour"><a href="#" onclick="history.back(); return false;">← Retour</a></p>
+    <h2>{texte(p['titre'])}</h2>
+    {f'<p class="sous-titre">{st}</p>' if st else ''}
+    {bloc_tags(p)}
+    <div class="detail">
+      <div class="detail-texte">
+{texte_page}
+{chr(10).join(extra)}
+      </div>
+      <div class="detail-images">
+{images}
+      </div>
+    </div>
+  </div>
+</section>"""
 
 
 def section_a_propos(ap):
@@ -288,7 +453,15 @@ def section_accueil(acc):
 </section>"""
 
 
-def construire_page(reglages, projets):
+def grille(cartes):
+    return f"""    <div class="projets">
+
+{chr(10).join(cartes)}
+
+    </div>"""
+
+
+def construire_page(reglages, projets, pages):
     global PREFIXE_COLLAB, AFFICHER_THEMES, NOM
     site = reglages["site"]
     ap = reglages.get("a_propos", {})
@@ -322,45 +495,44 @@ def construire_page(reglages, projets):
     accueil = section_accueil(reglages.get("accueil", {}))
     sections = [s for s in (accueil, section_a_propos(ap)) if s]
     page_depart = "#accueil" if accueil else "#a-propos"
+
+    # Pages de catégorie : une carte par projet
     for c in categories:
-        blocs = [bloc_projet(p) for p in projets if c["nom"] in categories_de(p)]
+        cartes = [carte_projet(p) for p in projets if c["nom"] in categories_de(p)]
         sections.append(f"""<section class="theme" id="{identifiant(c['nom'])}">
   <div class="conteneur">
     <h2>{texte(c.get('titre', c['nom']))}</h2>
-    <div class="projets">
-
-{chr(10).join(blocs)}
-
-    </div>
+{grille(cartes)}
   </div>
 </section>""")
 
-    # Une page par étiquette : tous les projets qui la portent, quelle que soit
-    # leur catégorie. Elle s'ouvre en cliquant sur l'étiquette.
+    # Une page détaillée par projet
+    for p in projets:
+        sections.append(page_projet(p, pages))
+
+    # Une page par étiquette : tous les projets qui la portent
     tags = {}
     for p in projets:
         for t in etiquettes_de(p):
             tags.setdefault(identifiant(t), t)
     for slug, nom in sorted(tags.items()):
         concernes = [p for p in projets if slug in [identifiant(t) for t in etiquettes_de(p)]]
-        blocs = [bloc_projet(p, tag_actif=nom) for p in concernes]
         nombre = f"{len(concernes)} projet" + ("s" if len(concernes) > 1 else "")
         sections.append(f"""<section class="theme page-tag" id="tag-{slug}">
   <div class="conteneur">
     <p class="retour"><a href="#" onclick="history.back(); return false;">← Retour</a></p>
     <h2>{texte(nom)}</h2>
     <p class="compte">{nombre}</p>
-    <div class="projets">
-
-{chr(10).join(blocs)}
-
-    </div>
+{grille([carte_projet(p, tag_actif=nom) for p in concernes])}
   </div>
 </section>""")
 
     description = texte(" ".join(ap.get("texte", "").split())[:300])
     email = texte(ap.get("email", ""))
     pied = texte(NOM) + (f' · <a href="mailto:{email}">{email}</a>' if email else "")
+
+    # Pour souligner la bonne catégorie dans le menu quand une page de projet est ouverte
+    projet_vers_categorie = {ancre(p): "#" + identifiant(categories_de(p)[0]) for p in projets}
 
     return f"""<!DOCTYPE html>
 <!-- Page générée automatiquement par build.py à partir de Notion : ne pas modifier à la main. -->
@@ -403,9 +575,11 @@ def construire_page(reglages, projets):
 
 <script>
   // Souligne l'élément du menu correspondant à la page ouverte
+  var PROJETS = {json.dumps(projet_vers_categorie)};
   function marquerMenu() {{
     var liens = document.querySelectorAll('.menu a');
     var actif = location.hash || '{page_depart}';
+    if (PROJETS[actif.slice(1)]) actif = PROJETS[actif.slice(1)];
     liens.forEach(function (lien) {{
       lien.classList.toggle('actif', lien.getAttribute('href') === actif);
     }});
@@ -427,7 +601,11 @@ def construire_page(reglages, projets):
 def main():
     reglages = lire_reglages()
     projets = lire_projets()
-    page = construire_page(reglages, projets)
+    pages = lire_pages_notion()
+    page = construire_page(reglages, projets, pages)
+    avec_page = sum(1 for p in projets if identifiant(p["titre"]) in pages)
+    print(f"{avec_page} projets ont une page détaillée écrite dans Notion, "
+          f"les autres utilisent la colonne Description.")
 
     if SORTIE.exists():
         shutil.rmtree(SORTIE)
@@ -438,6 +616,9 @@ def main():
     for dossier in ("documents", "icones"):
         if (DOSSIER / dossier).exists():
             shutil.copytree(DOSSIER / dossier, SORTIE / dossier)
+    for publie, source in MEDIAS.items():
+        (SORTIE / publie).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(source, SORTIE / publie)
     print(f"Site généré dans {SORTIE.name}/.")
 
 

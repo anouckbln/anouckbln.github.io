@@ -11,7 +11,7 @@
   --ligne: #d9deef;       /* traits de séparation légers */
   --police: "Open Sans", Arial, sans-serif;
   --largeur: none;        /* largeur maximale du contenu (none = toute la largeur de l'écran, ou par exemple 1600px) */
-  --colonne: 300px;       /* largeur minimale d'un bloc projet (4 par ligne sur grand écran) */
+  --colonne: 320px;       /* largeur minimale d'une carte projet : plus petit = plus de cartes par ligne */
 
   /* Tailles de texte : une échelle régulière (×1,25 environ) à partir de 16 px.
      Pour tout agrandir ou réduire, change ces valeurs. */
@@ -184,47 +184,113 @@ main:not(:has(.theme:target)) .theme:first-of-type {
   margin: 0 0 1em;
 }
 
-/* ---------- Grille de projets ---------- */
+/* ---------- Grille de cartes ---------- */
 .projets {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(var(--colonne), 100%), 1fr));
-  gap: 40px 40px;
+  grid-template-columns: repeat(auto-fill, minmax(min(var(--colonne), 100%), 1fr));
+  gap: 48px 32px;
   align-items: start;
 }
 
-/* ---------- Bloc d'un projet ---------- */
-.projet h3 {
+/* ---------- Carte d'un projet (cliquable) ---------- */
+.carte-lien {
+  display: block;
+  text-decoration: none;
+}
+
+.carte-image {
+  aspect-ratio: 4 / 3;           /* même format pour toutes les cartes */
+  overflow: hidden;
+  background: var(--ligne);
+  margin-bottom: 14px;
+}
+
+.carte-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .4s ease;
+}
+
+.carte-lien:hover .carte-image img { transform: scale(1.04); }
+
+.carte h3 {
   font-size: var(--taille-titre-projet);
   font-weight: 800;
   font-style: italic;
   line-height: 1.25;
-  margin: 0 0 12px;
+  margin: 0 0 10px;
 }
 
-.projet p {
+.carte-lien:hover h3 {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 2px;
+}
+
+.sous-titre {
+  font-size: var(--taille-petite);
+  font-weight: 600;
+  opacity: .75;
+  margin: -6px 0 10px;
+}
+
+.carte .resume {
   font-size: var(--taille-texte);
-  line-height: 1.6;
-  max-width: var(--largeur-texte);
-  margin: 0 0 .8em;
+  line-height: 1.55;
+  margin: 0 0 14px;
 }
 
-.projet .collab {
+/* ---------- Page détaillée d'un projet ---------- */
+.page-projet .sous-titre { font-size: var(--taille-texte); margin-bottom: 16px; }
+.page-projet h2 { margin-bottom: 8px; }
+
+.detail {
+  display: grid;
+  grid-template-columns: minmax(0, var(--largeur-texte)) minmax(0, 1fr);
+  gap: 32px 64px;
+  align-items: start;
+  margin-top: 32px;
+}
+
+.detail-texte h3 {
+  font-size: var(--taille-petite);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin: 28px 0 8px;
+}
+
+.detail-texte h3:first-child { margin-top: 0; }
+
+.detail-texte p,
+.detail-texte li {
+  font-size: var(--taille-texte);
+  line-height: 1.65;
+}
+
+.detail-texte p { margin: 0 0 .9em; }
+.detail-texte ul, .detail-texte ol { margin: 0 0 1em; padding-left: 1.2em; }
+.detail-texte li { margin-bottom: .3em; }
+.detail-texte figure { margin: 20px 0; }
+.detail-texte figcaption { font-size: var(--taille-petite); font-style: italic; margin-top: 6px; }
+
+.detail-texte .collab {
   font-size: var(--taille-petite);
   font-style: italic;
   opacity: .8;
+  margin-top: 24px;
 }
 
-.projet .lien {
-  font-weight: 700;
-}
+.detail-texte .lien { font-weight: 700; }
 
-.projet .images {
+.detail-images {
   display: grid;
-  gap: 14px;
-  margin-top: 18px;
+  gap: 20px;
 }
 
-.projet .images a:hover img { opacity: .85; }
+.detail-images img { width: 100%; }
+.detail-images a:hover img { opacity: .9; }
 
 /* ---------- Étiquettes (tags), cliquables ---------- */
 .tags {
@@ -254,8 +320,9 @@ main:not(:has(.theme:target)) .theme:first-of-type {
 .tag.actif { box-shadow: 0 0 0 2px var(--fond), 0 0 0 4px var(--couleur-tag, var(--tag)); }
 
 /* ---------- Page qui regroupe les projets d'une étiquette ---------- */
-.page-tag .retour { margin: 0 0 8px; font-size: var(--taille-menu); font-weight: 700; }
-.page-tag .retour a { text-decoration: none; }
+.retour { margin: 0 0 8px; font-size: var(--taille-menu); font-weight: 700; }
+.retour a { text-decoration: none; }
+.retour a:hover { text-decoration: underline; }
 .page-tag h2 { margin-bottom: 4px; }
 .page-tag .compte { margin: 0 0 28px; opacity: .75; }
 
@@ -268,6 +335,10 @@ footer {
 }
 
 /* ---------- Téléphone ---------- */
+@media (max-width: 900px) {
+  .detail { grid-template-columns: 1fr; }
+}
+
 @media (max-width: 600px) {
   :root {
     --taille-texte: 15px;
