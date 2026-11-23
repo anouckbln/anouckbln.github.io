@@ -10,6 +10,8 @@
 [site]
 nom = "Anouck Blouin"
 titre = "Anouck Blouin - Portfolio"
+# Mention en bas de chaque page (mets "" pour l'enlever)
+mention_ia = "Site conçu et développé avec l'aide d'une IA (Claude, Anthropic). Projets et contenus : Anouck Blouin."
 
 
 # ---------- Page d'accueil ----------
@@ -43,6 +45,8 @@ thematiques = [
 ]
 texte = """
 Ingénieure diplômée de l'EPFL en génie civil, climat et transformation des territoires, je souhaite agir pour l'aménagement de territoires durables. Au cœur de mes préoccupations : l'adaptation des territoires au changement climatique, mais aussi la transformation des villes au service du bien-être et de la santé des habitant·es. Une transformation juste et durable des territoires nécessite de prendre en compte les inégalités sociales, environnementales et d'accès aux services, notamment de santé.
+
+Ma formation d'ingénieure généraliste en génie civil (structures, transports, hydraulique, géotechnique) me donne une base technique solide pour passer du diagnostic au projet.
 
 Je crois en la force des données pour éclairer la décision publique, embarquer les habitant·es et prendre des décisions éclairées. Il faut vulgariser les sujets, notamment à travers la facilitation graphique.
 

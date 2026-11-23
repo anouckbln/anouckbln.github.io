@@ -349,7 +349,7 @@ def carte_projet(p, tag_actif=None):
     """La carte d'un projet dans une page de catégorie ou d'étiquette."""
     images = images_de(p)
     image = (f'<div class="carte-image"><img src="{texte(images[0])}" alt="" loading="lazy"></div>'
-             if images else '<div class="carte-image vide"></div>')
+             if images else '')
     st = sous_titre(p)
     return f"""      <article class="carte">
         <a class="carte-lien" href="#{ancre(p)}">
@@ -581,6 +581,8 @@ def construire_page(reglages, projets, pages):
     description = texte(" ".join(ap.get("texte", "").split())[:300])
     email = texte(ap.get("email", ""))
     pied = texte(NOM) + (f' · <a href="mailto:{email}">{email}</a>' if email else "")
+    if site.get("mention_ia"):
+        pied += f'\n    <p class="mention-ia">{texte(site["mention_ia"])}</p>'
 
 
     return f"""<!DOCTYPE html>

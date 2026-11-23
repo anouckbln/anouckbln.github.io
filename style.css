@@ -431,6 +431,12 @@ footer {
   opacity: .8;
 }
 
+.mention-ia {
+  margin: 6px 0 0;
+  font-size: 12px;
+  opacity: .75;
+}
+
 /* ---------- Téléphone ---------- */
 @media (max-width: 900px) {
   .detail { grid-template-columns: 1fr; }
