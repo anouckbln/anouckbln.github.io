@@ -1,30 +1,39 @@
 /* =========================================================
    STYLE DU PORTFOLIO
+   Direction : un portfolio d'architecte, aéré et fin,
+   avec le bleu outremer, le saumon et le turquoise en touches « pop ».
    Pour changer les couleurs, la police ou les tailles,
    modifie les variables ci-dessous : tout le site suit.
    ========================================================= */
 
 :root {
-  --bleu: #0a27a8;        /* couleur principale (titres, textes, fond « A propos ») */
-  --tag: #f08a6c;         /* couleur des étiquettes (tags) */
-  --bulle: #2bb5a5;       /* couleur des bulles de thématiques (page « A propos ») */
-  --texte-bulle: #0d1530; /* texte dans les bulles */
-  --fond: #ffffff;        /* fond des pages de projets */
-  --ligne: #d9deef;       /* traits de séparation légers */
-  --fond-image: #f3f5fb;  /* fond autour des images dans les cartes */
-  --police: "Open Sans", Arial, sans-serif;
-  --largeur: none;        /* largeur maximale du contenu (none = toute la largeur de l'écran, ou par exemple 1600px) */
-  --colonne: 320px;       /* largeur minimale d'une carte projet : plus petit = plus de cartes par ligne */
+  /* Couleurs */
+  --bleu: #0a27a8;          /* couleur principale : textes, titres, fond « A propos » */
+  --bleu-doux: #5d6cbf;     /* textes secondaires (cadre, année, légendes) */
+  --tag: #ec7656;           /* saumon : étiquettes et type de projet */
+  --turquoise: #2bb5a5;     /* bulles de thématiques, étiquette « Publication » */
+  --texte-bulle: #0d1a5c;   /* texte dans les bulles */
+  --fond: #ffffff;
+  --ligne: #dfe3f3;         /* traits fins de séparation */
 
-  /* Tailles de texte : une échelle régulière (×1,25 environ) à partir de 16 px.
-     Pour tout agrandir ou réduire, change ces valeurs. */
-  --taille-petite: 11px;                       /* étiquettes, pied de page, mentions */
-  --taille-texte: 12px;                        /* texte courant, descriptions */
-  --taille-moyenne: 18px;                      /* texte « A propos », légende d'accueil */
-  --taille-titre-projet: 14px;                 /* titre d'un projet */
-  --taille-titre-page: clamp(28px, 2.6vw, 36px); /* titre d'une page */
-  --taille-menu: 15px;                         /* menu */
-  --largeur-texte: 68ch;                       /* longueur maximale d'une ligne de texte */
+  /* Police : Archivo, une linéale à largeur variable, fine et nette */
+  --police: "Archivo", "Helvetica Neue", Arial, sans-serif;
+
+  /* Mise en page */
+  --largeur: none;          /* largeur maximale du contenu (none = toute la largeur) */
+  --marge: clamp(20px, 3vw, 48px);  /* marges sur les côtés */
+  --colonne: 300px;         /* largeur minimale d'une carte projet */
+
+  /* Tailles de texte */
+  --taille-petite: 12px;    /* étiquettes, pied de page, mentions */
+  --taille-meta: 13px;      /* cadre et année sous les titres */
+  --taille-texte: 14px;     /* résumés des cartes */
+  --taille-lecture: 16px;   /* texte des pages de projet et « A propos » */
+  --taille-titre-projet: 17px;
+  --taille-titre-une: 22px; /* titre des projets à la une */
+  --taille-titre-page: clamp(36px, 4.2vw, 60px);
+  --taille-menu: 14px;
+  --largeur-texte: 64ch;    /* longueur maximale d'une ligne de texte */
 }
 
 /* ---------- Bases ---------- */
@@ -36,29 +45,35 @@ body {
   margin: 0;
   font-family: var(--police);
   font-size: var(--taille-texte);
-  line-height: 1.6;
+  font-weight: 400;
+  line-height: 1.55;
   color: var(--bleu);
   background: var(--fond);
+  -webkit-font-smoothing: antialiased;
 }
 
 a { color: var(--bleu); }
+
+a:focus-visible {
+  outline: 2px solid var(--tag);
+  outline-offset: 3px;
+}
 
 img { max-width: 100%; height: auto; display: block; }
 
 .conteneur {
   max-width: var(--largeur);
   margin: 0 auto;
-  padding: 0 clamp(16px, 2vw, 32px);   /* marges sur les côtés */
+  padding: 0 var(--marge);
 }
 
-/* ---------- En-tête : nom à gauche, menu à droite, sur une ligne ---------- */
-/* Il reste visible en haut de l'écran quand on fait défiler la page. */
+/* ---------- En-tête : nom à gauche, menu à droite ---------- */
 .entete {
   position: sticky;
   top: 0;
   z-index: 10;
   background: var(--fond);
-  border-bottom: 1.5px solid var(--bleu);
+  border-bottom: 1px solid var(--bleu);
 }
 
 .entete .conteneur {
@@ -67,45 +82,42 @@ img { max-width: 100%; height: auto; display: block; }
   align-items: baseline;
   justify-content: space-between;
   gap: 8px 40px;
-  padding-top: 18px;
-  padding-bottom: 14px;
+  padding-top: 22px;
+  padding-bottom: 16px;
 }
 
 .entete .nom {
-  font-size: var(--taille-titre-projet);
-  font-weight: 700;
-  text-transform: uppercase;
+  font-size: 18px;
+  font-weight: 600;
+  font-stretch: 95%;
+  letter-spacing: -.01em;
   text-decoration: none;
-  letter-spacing: .01em;
   white-space: nowrap;
 }
 
 .menu {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 24px;
+  gap: 6px 32px;
 }
 
 .menu a {
   font-size: var(--taille-menu);
-  font-weight: 700;
-  font-style: italic;
-  line-height: 1.3;
-  white-space: nowrap;
+  font-weight: 450;
   text-decoration: none;
-  text-underline-offset: 5px;
-  text-decoration-thickness: 2px;
+  text-underline-offset: 7px;
+  text-decoration-thickness: 1px;
+  white-space: nowrap;
 }
 
 .menu a:hover,
 .menu a.actif { text-decoration-line: underline; }
 
 /* ---------- Pages (une seule visible à la fois) ---------- */
-/* À l'arrivée sur le site, c'est la première (« A propos »). */
 .theme {
   display: none;
-  padding: 32px 0 72px;
-  scroll-margin-top: 100vh;   /* chaque page s'affiche depuis le haut, sous le menu */
+  padding: 56px 0 96px;
+  scroll-margin-top: 100vh;   /* chaque page s'affiche depuis le haut */
 }
 
 .theme:target,
@@ -115,31 +127,29 @@ main:not(:has(.theme:target)) .theme:first-of-type {
 
 .theme h2 {
   font-size: var(--taille-titre-page);
-  font-weight: 800;
+  font-weight: 500;
   font-style: italic;
-  line-height: 1.2;
-  margin: 0 0 32px;
+  font-stretch: 92%;
+  letter-spacing: -.02em;
+  line-height: 1.05;
+  margin: 0 0 20px;
 }
 
-/* ---------- Page d'accueil : photo de couverture et légende ---------- */
+/* ---------- Accueil : mosaïque et légende ---------- */
 .couverture {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
-  gap: 12px 20px;
-  padding-top: 24px;
+  gap: 16px 28px;
 }
 
-.image-couverture {
-  width: min(100%, 720px);   /* largeur de la photo de couverture (si pas de mosaïque) */
-}
+.image-couverture { width: min(100%, 720px); }
 
-/* Mosaïque de 9 photos : elles apparaissent une par une, chacune est cliquable */
 .mosaique {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  width: min(100%, 720px);   /* largeur de la mosaïque */
+  gap: 8px;
+  width: min(100%, 720px);
 }
 
 .tuile {
@@ -164,110 +174,63 @@ main:not(:has(.theme:target)) .theme:first-of-type {
   to   { opacity: 1; transform: none; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .tuile { animation: none; }
-}
-
 .legende-accueil {
   margin: 0;
+  font-size: 22px;
+  font-weight: 400;
   font-style: italic;
-  font-size: var(--taille-moyenne);
+  font-stretch: 92%;
+  letter-spacing: -.01em;
 }
 
 /* ---------- Page « A propos » sur fond bleu ---------- */
 .a-propos {
   background: var(--bleu);
   color: #fff;
-  padding: 48px 0 72px;
   min-height: 70vh;
 }
 
 .a-propos a { color: #fff; }
 
+.colonnes-a-propos {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+  gap: 48px 80px;
+  align-items: center;
+}
+
 .carte-visite {
   display: flex;
   flex-wrap: wrap;
   gap: 16px 24px;
-  align-items: flex-start;
-  margin-bottom: 32px;
+  align-items: flex-end;
+  margin: 12px 0 40px;
 }
 
 .carte-visite .photo {
-  width: 120px;
-  aspect-ratio: 3 / 4;
+  width: 112px;
+  aspect-ratio: 5 / 6;
   object-fit: cover;
 }
 
-.contact p { margin: 0; font-size: var(--taille-texte); }
+.contact p { margin: 0; font-size: var(--taille-texte); line-height: 1.6; }
 .contact a { text-decoration: none; overflow-wrap: anywhere; }
-.contact a:hover { text-decoration: underline; }
-.contact-nom { font-weight: 700; text-transform: uppercase; }
-.lien-cv { margin-top: 18px !important; font-style: italic; font-weight: 600; }
-.lien-cv a { text-decoration: underline !important; }
-
-.reseaux { margin-top: 10px !important; }
-.icone {
-  display: inline-block;
-  font-size: 28px;
-  line-height: 1;
-}
-.icone:hover { opacity: .8; }
+.contact a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.contact-nom { font-weight: 600; }
+.reseaux { margin-top: 8px !important; }
+.icone { display: inline-block; font-size: 22px; line-height: 1; }
+.icone:hover { opacity: .75; }
+.lien-cv { margin-top: 10px !important; }
+.lien-cv a { text-decoration: underline !important; text-underline-offset: 4px; }
 
 .texte-a-propos p {
-  font-style: italic;
-  font-size: var(--taille-moyenne);
-  line-height: 1.65;
+  font-size: var(--taille-lecture);
+  line-height: 1.7;
   max-width: var(--largeur-texte);
-  margin: 0 0 1em;
+  margin: 0 0 1.1em;
 }
 
-/* ---------- Filtres de la page Projets ---------- */
-.filtres {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: -12px 0 36px;
-}
-
-.filtre {
-  font-size: var(--taille-menu);
-  font-weight: 700;
-  font-style: italic;
-  text-decoration: none;
-  padding: 6px 18px;
-  border: 1.5px solid var(--bleu);
-  border-radius: 999px;
-}
-
-.filtre:hover { background: var(--ligne); }
-
-.filtre.actif {
-  background: var(--bleu);
-  color: var(--fond);
-}
-
-.intro-projets {
-  font-size: var(--taille-moyenne);
-  font-style: italic;
-  max-width: var(--largeur-texte);
-  margin: -16px 0 28px;
-}
-
-.intro-axe {
-  font-size: var(--taille-moyenne);
-  font-style: italic;
-  max-width: var(--largeur-texte);
-  margin: -16px 0 36px;
-}
-
-/* ---------- Page « A propos » : texte à gauche, bulles de thématiques à droite ---------- */
-.colonnes-a-propos {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
-  gap: 40px 64px;
-  align-items: center;
-}
-
+/* Bulles de thématiques */
 .thematiques {
   position: relative;
   list-style: none;
@@ -285,65 +248,71 @@ main:not(:has(.theme:target)) .theme:first-of-type {
   width: 132px;
   height: 132px;
   border-radius: 50%;
-  background: var(--bulle);
+  background: var(--turquoise);
   color: var(--texte-bulle);
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 14px;
-  font-size: 14px;
-  font-weight: 700;
+  padding: 16px;
+  font-size: 13.5px;
+  font-weight: 500;
   font-style: italic;
   line-height: 1.25;
   hyphens: none;
-  overflow-wrap: normal;
 }
 
-@media (max-width: 1000px) {
-  .colonnes-a-propos { grid-template-columns: 1fr; }
+/* ---------- Page Projets ---------- */
+.intro-projets,
+.intro-axe {
+  font-size: var(--taille-lecture);
+  font-style: italic;
+  color: var(--bleu-doux);
+  max-width: var(--largeur-texte);
+  margin: 0 0 32px;
 }
 
-/* Sur petit écran, les bulles se rangent simplement côte à côte */
-@media (max-width: 600px) {
-  .thematiques { height: auto; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-  .bulle { position: static; width: 118px; height: 118px; font-size: 12.5px; padding: 8px; }
+.filtres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 56px;
+}
+
+.filtre {
+  font-size: 13px;
+  font-weight: 450;
+  text-decoration: none;
+  padding: 5px 14px;
+  border: 1px solid var(--bleu);
+  border-radius: 999px;
+  transition: background .15s, color .15s;
+}
+
+.filtre:hover { background: var(--bleu); color: var(--fond); }
+.filtre.actif { background: var(--bleu); color: var(--fond); }
+
+.titre-rangee {
+  font-size: 15px;
+  font-weight: 500;
+  font-style: italic;
+  border-top: 1px solid var(--bleu);
+  padding-top: 12px;
+  margin: 0 0 28px;
 }
 
 /* ---------- Grille de cartes ---------- */
 .projets {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(var(--colonne), 100%), 1fr));
-  gap: 48px 32px;
+  gap: 64px 40px;
   align-items: start;
-}
-
-/* ---------- « À la une » : rangée de grandes cartes ---------- */
-.titre-rangee {
-  font-size: var(--taille-petite);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  margin: 0 0 18px;
 }
 
 .projets.une {
   grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr));
-  gap: 40px 40px;
-  margin-bottom: 64px;
-}
-
-.carte.grande .carte-image { aspect-ratio: 16 / 10; }
-.carte.grande h3 { font-size: calc(var(--taille-titre-projet) * 1.2); }
-
-/* Type de projet (Professionnel, Recherche, Master…) au-dessus du titre */
-.type {
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  color: var(--tag);
-  margin: 0 0 4px;
+  gap: 48px 48px;
+  margin-bottom: 88px;
 }
 
 /* ---------- Carte d'un projet (cliquable) ---------- */
@@ -353,164 +322,172 @@ main:not(:has(.theme:target)) .theme:first-of-type {
 }
 
 .carte-image {
-  aspect-ratio: 4 / 3;           /* même cadre pour toutes les cartes */
+  aspect-ratio: 4 / 3;            /* même cadre pour toutes les cartes */
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--fond-image);
-  margin-bottom: 14px;
-  transition: opacity .2s;
+  align-items: flex-end;          /* les images se posent sur une même ligne de base */
+  justify-content: flex-start;
+  margin-bottom: 18px;
 }
+
+.carte.grande .carte-image { aspect-ratio: 16 / 10; }
 
 .carte-image img {
   max-width: 100%;
   max-height: 100%;
-  object-fit: contain;           /* l'image entière, sans recadrage ni agrandissement */
+  object-fit: contain;            /* l'image entière, sans recadrage */
+  transition: opacity .2s;
 }
 
-.carte-lien:hover .carte-image { opacity: .85; }
+.carte-lien:hover .carte-image img { opacity: .82; }
 
 .carte h3 {
   font-size: var(--taille-titre-projet);
-  font-weight: 800;
+  font-weight: 600;
   font-style: italic;
+  font-stretch: 95%;
+  letter-spacing: -.005em;
   line-height: 1.25;
-  margin: 0 0 10px;
+  margin: 0 0 6px;
 }
+
+.carte.grande h3 { font-size: var(--taille-titre-une); font-weight: 550; }
 
 .carte-lien:hover h3 {
   text-decoration: underline;
   text-underline-offset: 4px;
-  text-decoration-thickness: 2px;
+  text-decoration-thickness: 1px;
 }
 
-.sous-titre {
-  font-size: var(--taille-petite);
-  font-weight: 600;
-  opacity: .75;
-  margin: -6px 0 10px;
+.meta {
+  font-size: var(--taille-meta);
+  color: var(--bleu-doux);
+  margin: 0 0 12px;
+}
+
+.meta .type {
+  color: var(--tag);
+  font-weight: 500;
+  margin-right: 6px;
 }
 
 .carte .resume {
   font-size: var(--taille-texte);
   line-height: 1.55;
+  max-width: var(--largeur-texte);
   margin: 0 0 14px;
 }
 
-/* ---------- Page détaillée d'un projet ---------- */
-.page-projet .sous-titre { font-size: var(--taille-texte); margin-bottom: 16px; }
-.page-projet h2 { margin-bottom: 8px; }
+/* ---------- Étiquettes (tags), cliquables ---------- */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 14px;
+}
+
+.tag {
+  font-size: var(--taille-petite);
+  font-weight: 450;
+  color: var(--couleur-tag, var(--tag));
+  text-decoration: none;
+  line-height: 1.3;
+  padding: 2px 10px;
+  border: 1px solid var(--couleur-tag, var(--tag));
+  border-radius: 999px;
+  transition: background .15s, color .15s;
+}
+
+.tag:hover,
+.tag.actif {
+  background: var(--couleur-tag, var(--tag));
+  color: var(--fond);
+}
+
+/* ---------- Pages d'étiquette et de projet ---------- */
+.retour { margin: 0 0 20px; font-size: var(--taille-menu); }
+.retour a { text-decoration: none; }
+.retour a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+.page-tag .compte { color: var(--bleu-doux); margin: 0 0 48px; }
+
+.page-projet .meta { font-size: var(--taille-lecture); margin-bottom: 16px; }
 
 .detail {
   display: grid;
   grid-template-columns: minmax(0, var(--largeur-texte)) minmax(0, 1fr);
-  gap: 32px 64px;
+  gap: 40px 80px;
   align-items: start;
-  margin-top: 32px;
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--ligne);
 }
 
 .detail-texte h3 {
-  font-size: var(--taille-petite);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  margin: 28px 0 8px;
+  font-size: var(--taille-lecture);
+  font-weight: 600;
+  font-style: italic;
+  margin: 32px 0 6px;
 }
 
 .detail-texte h3:first-child { margin-top: 0; }
 
 .detail-texte p,
 .detail-texte li {
-  font-size: var(--taille-texte);
-  line-height: 1.65;
+  font-size: var(--taille-lecture);
+  line-height: 1.7;
 }
 
-.detail-texte p { margin: 0 0 .9em; }
-.detail-texte ul, .detail-texte ol { margin: 0 0 1em; padding-left: 1.2em; }
+.detail-texte p { margin: 0 0 1em; }
+.detail-texte ul, .detail-texte ol { margin: 0 0 1em; padding-left: 1.1em; }
 .detail-texte li { margin-bottom: .3em; }
-.detail-texte figure { margin: 20px 0; }
-.detail-texte figcaption { font-size: var(--taille-petite); font-style: italic; margin-top: 6px; }
+.detail-texte li::marker { color: var(--tag); }
+.detail-texte figure { margin: 24px 0; }
+.detail-texte figcaption { font-size: var(--taille-meta); color: var(--bleu-doux); margin-top: 8px; }
 
-.detail-texte .collab {
-  font-size: var(--taille-petite);
-  font-style: italic;
-  opacity: .8;
-  margin-top: 24px;
-}
+.detail-texte .collab { font-size: var(--taille-meta); font-style: italic; color: var(--bleu-doux); margin-top: 28px; }
+.detail-texte .lien { font-weight: 500; text-underline-offset: 4px; }
 
-.detail-texte .lien { font-weight: 700; }
-
-.detail-images {
-  display: grid;
-  gap: 20px;
-}
-
-.detail-images img {
-  width: auto;          /* jamais plus grande que sa taille réelle, pour rester nette */
-  max-width: 100%;
-}
+.detail-images { display: grid; gap: 28px; }
+.detail-images img { width: auto; max-width: 100%; }   /* jamais agrandie, pour rester nette */
 .detail-images a:hover img { opacity: .9; }
-
-/* ---------- Étiquettes (tags), cliquables ---------- */
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 0 0 14px;
-}
-
-.tag {
-  background: var(--couleur-tag, var(--tag));
-  color: #fff;
-  font-size: var(--taille-petite);
-  font-weight: 700;
-  font-style: italic;
-  text-decoration: none;
-  text-align: center;
-  line-height: 1.2;
-  min-width: 90px;
-  padding: 5px 16px;
-  border-radius: 999px;
-}
-
-.tag:hover { filter: brightness(.92); }
-
-/* Étiquette de la page en cours, sur une page d'étiquette */
-.tag.actif { box-shadow: 0 0 0 2px var(--fond), 0 0 0 4px var(--couleur-tag, var(--tag)); }
-
-/* ---------- Page qui regroupe les projets d'une étiquette ---------- */
-.retour { margin: 0 0 8px; font-size: var(--taille-menu); font-weight: 700; }
-.retour a { text-decoration: none; }
-.retour a:hover { text-decoration: underline; }
-.page-tag h2 { margin-bottom: 4px; }
-.page-tag .compte { margin: 0 0 28px; opacity: .75; }
 
 /* ---------- Pied de page ---------- */
 footer {
   border-top: 1px solid var(--ligne);
-  padding: 24px 0 40px;
+  padding: 28px 0 44px;
   font-size: var(--taille-petite);
-  opacity: .8;
+  color: var(--bleu-doux);
 }
 
-.mention-ia {
-  margin: 6px 0 0;
-  font-size: 12px;
-  opacity: .75;
+footer a { color: var(--bleu-doux); }
+
+.mention-ia { margin: 6px 0 0; opacity: .85; }
+
+/* ---------- Écrans moyens et petits ---------- */
+@media (max-width: 1000px) {
+  .colonnes-a-propos { grid-template-columns: 1fr; }
 }
 
-/* ---------- Téléphone ---------- */
 @media (max-width: 900px) {
   .detail { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 600px) {
   :root {
-    --taille-texte: 15px;
-    --taille-moyenne: 16px;
-    --taille-titre-projet: 18px;
-    --taille-menu: 14px;
+    --taille-lecture: 15px;
+    --taille-titre-une: 19px;
   }
   .entete { position: static; }
+  .menu { gap: 6px 22px; }
   .menu a { white-space: normal; }
+  .theme { padding: 36px 0 72px; }
+  .carte-image, .carte.grande .carte-image { aspect-ratio: auto; }   /* sur téléphone, l'image prend sa hauteur naturelle */
+  .legende-accueil { font-size: 18px; }
+  .thematiques { height: auto; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .bulle { position: static; width: 116px; height: 116px; font-size: 12.5px; padding: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tuile { animation: none; }
+  * { transition: none !important; }
 }

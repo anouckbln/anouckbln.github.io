@@ -327,7 +327,7 @@ def bloc_tags(p, tag_actif=None):
 def sous_titre(p):
     """« EPFL · 2024 »"""
     morceaux = [p.get("cadre", ""), p.get("annee", "")]
-    return " · ".join(texte(m) for m in morceaux if m.strip())
+    return ", ".join(texte(m) for m in morceaux if m.strip())
 
 
 def resume(p):
@@ -348,6 +348,17 @@ def ancre(p):
     return "projet-" + identifiant(p["titre"])
 
 
+def meta(p):
+    """Ligne sous le titre : type de projet (en couleur), cadre et année."""
+    morceaux = []
+    if p.get("type"):
+        morceaux.append(f'<span class="type">{texte(p["type"])}</span>')
+    st = sous_titre(p)
+    if st:
+        morceaux.append(st)
+    return f'<p class="meta">{" ".join(morceaux)}</p>' if morceaux else ""
+
+
 def est_a_la_une(p):
     return simplifier(p.get("une", "")) in ("yes", "oui", "true", "x", "1")
 
@@ -358,13 +369,11 @@ def carte_projet(p, tag_actif=None, grande=False):
     image = (f'<div class="carte-image"><img src="{texte(images[0])}" alt="" loading="lazy"></div>'
              if images else '')
     st = sous_titre(p)
-    type_projet = f'<p class="type">{texte(p["type"])}</p>' if p.get("type") else ""
     return f"""      <article class="carte{' grande' if grande else ''}">
         <a class="carte-lien" href="#{ancre(p)}">
           {image}
-          {type_projet}
           <h3>{texte(p['titre'])}</h3>
-          {f'<p class="sous-titre">{st}</p>' if st else ''}
+          {meta(p)}
           <p class="resume">{texte(resume(p))}</p>
         </a>
         {bloc_tags(p, tag_actif)}
@@ -393,9 +402,8 @@ def page_projet(p, pages):
     return f"""<section class="theme page-projet" id="{ancre(p)}">
   <div class="conteneur">
     <p class="retour"><a href="#" onclick="history.back(); return false;">← Retour</a></p>
-    {f'<p class="type">{texte(p["type"])}</p>' if p.get("type") else ''}
     <h2>{texte(p['titre'])}</h2>
-    {f'<p class="sous-titre">{st}</p>' if st else ''}
+    {meta(p)}
     {bloc_tags(p)}
     <div class="detail">
       <div class="detail-texte">
@@ -648,7 +656,7 @@ def construire_page(reglages, projets, pages):
   <meta name="description" content="{description}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600;1,700;1,800&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap">
   <!-- Icônes (LinkedIn) : Font Awesome Free, fichiers dans le dossier icones/ -->
   <link rel="stylesheet" href="icones/css/fontawesome.min.css">
   <link rel="stylesheet" href="icones/css/brands.min.css">
