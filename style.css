@@ -37,7 +37,13 @@
   --bleu: #0a27a8;          /* couleur principale : textes, titres, fond « A propos » */
   --bleu-doux: #5d6cbf;     /* textes secondaires (cadre, année, légendes) */
   --tag: #ec7656;           /* saumon : étiquettes et type de projet */
-  --turquoise: #2bb5a5;     /* bulles de thématiques, étiquette « Publication » */
+  --turquoise: #2bb5a5;     /* étiquette « Publication » */
+  /* Couleurs des bulles de thématiques (page « A propos »), utilisées à tour de rôle */
+  --bulle-1: #2bb5a5;       /* turquoise */
+  --bulle-2: #f08a6c;       /* saumon */
+  --bulle-3: #f6c945;       /* jaune soleil */
+  --bulle-4: #f4a6c6;       /* rose */
+  --bulle-5: #8fd27a;       /* vert tendre */
   --texte-bulle: #0d1a5c;   /* texte dans les bulles */
   --fond: #ffffff;
   --ligne: #dfe3f3;         /* traits fins de séparation */
@@ -272,7 +278,7 @@ main:not(:has(.theme:target)) .theme:first-of-type {
   width: 132px;
   height: 132px;
   border-radius: 50%;
-  background: var(--turquoise);
+  background: var(--bulle-1);
   color: var(--texte-bulle);
   display: flex;
   align-items: center;
@@ -285,6 +291,11 @@ main:not(:has(.theme:target)) .theme:first-of-type {
   line-height: 1.25;
   hyphens: none;
 }
+
+.bulle:nth-child(5n+2) { background: var(--bulle-2); }
+.bulle:nth-child(5n+3) { background: var(--bulle-3); }
+.bulle:nth-child(5n+4) { background: var(--bulle-4); }
+.bulle:nth-child(5n+5) { background: var(--bulle-5); }
 
 /* ---------- Page Projets ---------- */
 .intro-projets,
