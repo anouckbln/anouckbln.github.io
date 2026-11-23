@@ -19,9 +19,9 @@
   /* Tailles de texte : une échelle régulière (×1,25 environ) à partir de 16 px.
      Pour tout agrandir ou réduire, change ces valeurs. */
   --taille-petite: 13px;                       /* étiquettes, pied de page, mentions */
-  --taille-texte: 16px;                        /* texte courant, descriptions */
+  --taille-texte: 14px;                        /* texte courant, descriptions */
   --taille-moyenne: 18px;                      /* texte « A propos », légende d'accueil */
-  --taille-titre-projet: 20px;                 /* titre d'un projet */
+  --taille-titre-projet: 16px;                 /* titre d'un projet */
   --taille-titre-page: clamp(28px, 2.6vw, 36px); /* titre d'une page */
   --taille-menu: 15px;                         /* menu */
   --largeur-texte: 68ch;                       /* longueur maximale d'une ligne de texte */
