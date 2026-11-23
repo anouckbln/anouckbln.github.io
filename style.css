@@ -12,6 +12,16 @@
   --police: "Open Sans", Arial, sans-serif;
   --largeur: none;        /* largeur maximale du contenu (none = toute la largeur de l'écran, ou par exemple 1600px) */
   --colonne: 300px;       /* largeur minimale d'un bloc projet (4 par ligne sur grand écran) */
+
+  /* Tailles de texte : une échelle régulière (×1,25 environ) à partir de 16 px.
+     Pour tout agrandir ou réduire, change ces valeurs. */
+  --taille-petite: 13px;                       /* étiquettes, pied de page, mentions */
+  --taille-texte: 16px;                        /* texte courant, descriptions */
+  --taille-moyenne: 18px;                      /* texte « A propos », légende d'accueil */
+  --taille-titre-projet: 20px;                 /* titre d'un projet */
+  --taille-titre-page: clamp(28px, 2.6vw, 36px); /* titre d'une page */
+  --taille-menu: 15px;                         /* menu */
+  --largeur-texte: 68ch;                       /* longueur maximale d'une ligne de texte */
 }
 
 /* ---------- Bases ---------- */
@@ -22,8 +32,8 @@ html { scroll-behavior: smooth; }
 body {
   margin: 0;
   font-family: var(--police);
-  font-size: 15px;
-  line-height: 1.55;
+  font-size: var(--taille-texte);
+  line-height: 1.6;
   color: var(--bleu);
   background: var(--fond);
 }
@@ -59,7 +69,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 
 .entete .nom {
-  font-size: 20px;
+  font-size: var(--taille-titre-projet);
   font-weight: 700;
   text-transform: uppercase;
   text-decoration: none;
@@ -74,7 +84,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 
 .menu a {
-  font-size: 14px;
+  font-size: var(--taille-menu);
   font-weight: 700;
   font-style: italic;
   line-height: 1.3;
@@ -92,7 +102,7 @@ img { max-width: 100%; height: auto; display: block; }
 .theme {
   display: none;
   padding: 32px 0 72px;
-  scroll-margin-top: 0;
+  scroll-margin-top: 100vh;   /* chaque page s'affiche depuis le haut, sous le menu */
 }
 
 .theme:target,
@@ -101,11 +111,11 @@ main:not(:has(.theme:target)) .theme:first-of-type {
 }
 
 .theme h2 {
-  font-size: clamp(26px, 3vw, 34px);
+  font-size: var(--taille-titre-page);
   font-weight: 800;
   font-style: italic;
   line-height: 1.2;
-  margin: 0 0 28px;
+  margin: 0 0 32px;
 }
 
 /* ---------- Page d'accueil : photo de couverture et légende ---------- */
@@ -124,7 +134,7 @@ main:not(:has(.theme:target)) .theme:first-of-type {
 .legende-accueil {
   margin: 0;
   font-style: italic;
-  font-size: 16px;
+  font-size: var(--taille-moyenne);
 }
 
 /* ---------- Page « A propos » sur fond bleu ---------- */
@@ -151,20 +161,27 @@ main:not(:has(.theme:target)) .theme:first-of-type {
   object-fit: cover;
 }
 
-.contact p { margin: 0; font-size: 15px; }
+.contact p { margin: 0; font-size: var(--taille-texte); }
 .contact a { text-decoration: none; overflow-wrap: anywhere; }
 .contact a:hover { text-decoration: underline; }
 .contact-nom { font-weight: 700; text-transform: uppercase; }
 .lien-cv { margin-top: 18px !important; font-style: italic; font-weight: 600; }
 .lien-cv a { text-decoration: underline !important; }
 
+.reseaux { margin-top: 10px !important; }
+.icone {
+  display: inline-block;
+  font-size: 28px;
+  line-height: 1;
+}
+.icone:hover { opacity: .8; }
+
 .texte-a-propos p {
   font-style: italic;
-  font-size: 16px;
-  line-height: 1.6;
-  text-align: justify;
-  hyphens: auto;
-  margin: 0 0 18px;
+  font-size: var(--taille-moyenne);
+  line-height: 1.65;
+  max-width: var(--largeur-texte);
+  margin: 0 0 1em;
 }
 
 /* ---------- Grille de projets ---------- */
@@ -177,29 +194,28 @@ main:not(:has(.theme:target)) .theme:first-of-type {
 
 /* ---------- Bloc d'un projet ---------- */
 .projet h3 {
-  font-size: 19px;
+  font-size: var(--taille-titre-projet);
   font-weight: 800;
   font-style: italic;
-  line-height: 1.3;
-  margin: 0 0 14px;
-}
-
-.projet p {
-  font-size: 14px;
-  text-align: justify;
-  hyphens: auto;
+  line-height: 1.25;
   margin: 0 0 12px;
 }
 
+.projet p {
+  font-size: var(--taille-texte);
+  line-height: 1.6;
+  max-width: var(--largeur-texte);
+  margin: 0 0 .8em;
+}
+
 .projet .collab {
+  font-size: var(--taille-petite);
   font-style: italic;
   opacity: .8;
-  text-align: left;
 }
 
 .projet .lien {
   font-weight: 700;
-  font-size: 14px;
 }
 
 .projet .images {
@@ -221,7 +237,7 @@ main:not(:has(.theme:target)) .theme:first-of-type {
 .tag {
   background: var(--couleur-tag, var(--tag));
   color: #fff;
-  font-size: 12px;
+  font-size: var(--taille-petite);
   font-weight: 700;
   font-style: italic;
   text-decoration: none;
@@ -238,7 +254,7 @@ main:not(:has(.theme:target)) .theme:first-of-type {
 .tag.actif { box-shadow: 0 0 0 2px var(--fond), 0 0 0 4px var(--couleur-tag, var(--tag)); }
 
 /* ---------- Page qui regroupe les projets d'une étiquette ---------- */
-.page-tag .retour { margin: 0 0 8px; font-size: 15px; font-weight: 700; }
+.page-tag .retour { margin: 0 0 8px; font-size: var(--taille-menu); font-weight: 700; }
 .page-tag .retour a { text-decoration: none; }
 .page-tag h2 { margin-bottom: 4px; }
 .page-tag .compte { margin: 0 0 28px; opacity: .75; }
@@ -247,13 +263,18 @@ main:not(:has(.theme:target)) .theme:first-of-type {
 footer {
   border-top: 1px solid var(--ligne);
   padding: 24px 0 40px;
-  font-size: 13px;
+  font-size: var(--taille-petite);
   opacity: .8;
 }
 
 /* ---------- Téléphone ---------- */
 @media (max-width: 600px) {
+  :root {
+    --taille-texte: 15px;
+    --taille-moyenne: 16px;
+    --taille-titre-projet: 18px;
+    --taille-menu: 14px;
+  }
   .entete { position: static; }
   .menu a { white-space: normal; }
-  .projet p, .texte-a-propos p { text-align: left; }
 }

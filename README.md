@@ -13,6 +13,7 @@ Les projets sont rédigés dans la base Notion « Portfolio ». On l'exporte en 
 | `documents/` | Ton CV en PDF | Pour le mettre à jour |
 | `site.toml` | Page « A propos », menu, couleurs des étiquettes | De temps en temps |
 | `style.css` | Couleurs, police, tailles, marges | Pour changer l'apparence |
+| `icones/` | L'icône LinkedIn (bibliothèque Font Awesome, gratuite) | Non |
 | `build.py` | Le script Python qui transforme le CSV en site | Non |
 | `.github/workflows/publier.yml` | Lance `build.py` et publie le site à chaque modification | Non |
 
@@ -94,7 +95,7 @@ Les étiquettes sont saumon. Pour en colorer certaines autrement, ajoute une lig
 
 ## Changer l'apparence
 
-Ouvre `style.css` : les couleurs, la police et les largeurs se règlent dans les premières lignes (`--bleu`, `--tag`, `--largeur`, `--colonne`…). `--colonne` est la largeur minimale d'un bloc projet : plus elle est petite, plus il y a de projets par ligne.
+Ouvre `style.css` : les couleurs, la police, les largeurs et les tailles de texte se règlent dans les premières lignes (`--bleu`, `--tag`, `--largeur`, `--colonne`, `--taille-texte`, `--taille-titre-page`…). Les tailles suivent une échelle régulière à partir de 16 px : pour garder un ensemble harmonieux, change-les toutes dans la même proportion. `--colonne` est la largeur minimale d'un bloc projet : plus elle est petite, plus il y a de projets par ligne.
 
 ## Si le site ne se met pas à jour
 
