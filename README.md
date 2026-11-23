@@ -32,19 +32,26 @@ Colonnes reconnues (le nom compte, pas l'ordre ; majuscules et accents ignorés)
 | **Description** | Texte | Texte de la page du projet, si la page Notion est vide ; une ligne vide = un nouveau paragraphe |
 | **Tags** | Sélection multiple | Étiquettes saumon sous le titre, cliquables |
 | **thèmes** | Sélection multiple | Non affichés (voir `afficher_themes` dans `site.toml`) |
-| **Catégorie** | Sélection | Page où le projet apparaît |
+| **Catégorie** | Sélection multiple | Axes du projet : les filtres de la page Projets (un projet peut en avoir plusieurs) |
 | **Images** | Texte | Noms des fichiers du dossier `images/`, séparés par des virgules |
 | **Lien** | URL | Lien sous la description |
 | **Texte du lien** | Texte | Texte de ce lien (« Voir le projet » par défaut) |
 | **Collaboration, propriété intellectuelle** | Texte | Ligne « En collaboration avec … » sous la description |
 | **Brouillon** | Case à cocher | Cochée : le projet est caché |
-| **Ordre** | Nombre (facultatif) | Ordre d'affichage ; sinon, l'ordre de l'export |
+| **Ordre** | Nombre | Ordre d'affichage sur la page Projets : 1 = en premier. Mets tes meilleurs projets en tête |
 
 Toute autre colonne est ignorée : tu peux en garder pour toi (dates, notes…).
 
-Les options de **Catégorie** doivent être écrites exactement comme les `nom` de `site.toml`. Un projet dont la catégorie n'y est pas (par exemple « Autres projets ») n'apparaît nulle part.
+Les options de **Catégorie** doivent être écrites exactement comme les `nom` de `site.toml`. Un projet dont la catégorie n'y est pas apparaît dans « Tous », mais dans aucun filtre.
 
 Chaque étiquette est cliquable : elle ouvre une page qui regroupe tous les projets portant cette étiquette, quelle que soit leur catégorie. Ces pages sont créées automatiquement. Pour regrouper des projets, il suffit de leur donner la même étiquette, écrite exactement pareil.
+
+## Organisation du site
+
+- **Accueil** : la photo de couverture et sa légende (bloc `[accueil]` de `site.toml`).
+- **Projets** : tous les projets en cartes, dans l'ordre de la colonne **Ordre**. En haut, des boutons filtrent par axe : « Observer et diagnostiquer », « Aménager », etc.
+- **A propos** : ta présentation, sur fond bleu.
+- **CV** : ouvre ton CV en PDF.
 
 ## Cartes et pages de projet
 
@@ -83,24 +90,24 @@ Tout est dans le bloc `[a_propos]` de `site.toml` : texte, téléphone, email, L
 
 Pour mettre à jour ton CV, dépose le nouveau PDF dans `documents/` avec le même nom, `CV_Anouck_Blouin.pdf`. Il remplace l'ancien.
 
-## Ajouter ou renommer une catégorie
+## Ajouter ou renommer un axe (filtre)
 
 1. Dans `site.toml`, ajoute ou modifie un bloc :
 
 ```toml
 [[categorie]]
-nom = "Faire participer"
-onglet = "Faire participer les habitant·es"
-titre = "Faire participer les habitant·es"
+nom = "Faire participer les habitant·es"
+onglet = "Faire participer"
+titre = "Une phrase qui présente cet axe"
 ```
 
 - `nom` : écrit exactement comme l'option de la colonne **Catégorie** dans Notion ;
-- `onglet` : texte du menu (facultatif) ;
-- `titre` : titre de la page (facultatif).
+- `onglet` : texte du bouton de filtre (facultatif) ;
+- `titre` : phrase affichée sous les filtres quand l'axe est sélectionné (facultatif).
 
 2. Dans Notion, ajoute la même option à la colonne **Catégorie**.
 
-L'ordre des blocs dans `site.toml` est l'ordre du menu, après « A propos ».
+L'ordre des blocs dans `site.toml` est l'ordre des boutons.
 
 ## Couleurs des étiquettes
 

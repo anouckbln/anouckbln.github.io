@@ -184,6 +184,38 @@ main:not(:has(.theme:target)) .theme:first-of-type {
   margin: 0 0 1em;
 }
 
+/* ---------- Filtres de la page Projets ---------- */
+.filtres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: -12px 0 36px;
+}
+
+.filtre {
+  font-size: var(--taille-menu);
+  font-weight: 700;
+  font-style: italic;
+  text-decoration: none;
+  padding: 6px 18px;
+  border: 1.5px solid var(--bleu);
+  border-radius: 999px;
+}
+
+.filtre:hover { background: var(--ligne); }
+
+.filtre.actif {
+  background: var(--bleu);
+  color: var(--fond);
+}
+
+.intro-axe {
+  font-size: var(--taille-moyenne);
+  font-style: italic;
+  max-width: var(--largeur-texte);
+  margin: -16px 0 36px;
+}
+
 /* ---------- Grille de cartes ---------- */
 .projets {
   display: grid;

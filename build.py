@@ -16,7 +16,6 @@ Nécessite Python 3.11 ou plus récent, sans aucune installation.
 
 import csv
 import html
-import json
 import re
 import shutil
 import sys
@@ -125,7 +124,7 @@ def lire_projets():
         sys.exit(f"Colonne « Nom » introuvable dans {chemin.name}.")
     if "categorie" not in correspondance:
         print("Attention : pas de colonne « Catégorie » dans Notion, "
-              "tous les projets vont dans le premier onglet.")
+              "les filtres de la page Projets seront vides.")
 
     projets = []
     for position, ligne in enumerate(lignes):
@@ -479,29 +478,52 @@ def construire_page(reglages, projets, pages):
         for c in liste(p.get("categorie")):
             if c not in noms:
                 print(f"Attention : la catégorie « {c} » (projet « {p['titre']} ») "
-                      f"n'est pas dans site.toml, le projet n'est affiché dans aucune page. "
+                      f"n'est pas dans site.toml : le projet est dans « Tous » mais dans aucun filtre. "
                       f"Catégories possibles : {', '.join(noms)}.")
 
     def categories_de(p):
-        return liste(p.get("categorie")) or [premier]
+        return liste(p.get("categorie"))
 
-    # Menu : « A propos » puis les catégories
-    menu = []
+    reglages_projets = reglages.get("projets", {})
+    titre_projets = reglages_projets.get("titre", "Projets")
+
+    # Menu : Projets, A propos, CV
+    menu = [f'      <a href="#projets">{texte(titre_projets)}</a>']
     if ap:
         menu.append(f'      <a href="#a-propos">{texte(ap.get("onglet", "A propos"))}</a>')
-    menu += [f'      <a href="#{identifiant(c["nom"])}">{texte(c.get("onglet", c["nom"]))}</a>'
-             for c in categories]
+    if ap.get("cv") and reglages_projets.get("cv_dans_menu", True):
+        cv = texte(trouver_fichier(ap["cv"], "le CV"))
+        menu.append(f'      <a href="{cv}" target="_blank">CV</a>')
 
     accueil = section_accueil(reglages.get("accueil", {}))
     sections = [s for s in (accueil, section_a_propos(ap)) if s]
-    page_depart = "#accueil" if accueil else "#a-propos"
+    page_depart = "#accueil" if accueil else "#projets"
 
-    # Pages de catégorie : une carte par projet
+    # Page « Projets » : toutes les cartes, et les axes (catégories) comme filtres.
+    # Chaque filtre est une page à part (#axe-…), qui ne montre que les projets de cet axe.
+    def barre_filtres(actif):
+        boutons = [f'<a class="filtre{" actif" if actif is None else ""}" href="#projets">'
+                   f'{texte(reglages_projets.get("tous", "Tous"))}</a>']
+        for c in categories:
+            classe = "filtre actif" if actif == c["nom"] else "filtre"
+            boutons.append(f'<a class="{classe}" href="#axe-{identifiant(c["nom"])}">'
+                           f'{texte(c.get("onglet", c["nom"]))}</a>')
+        return '    <nav class="filtres" aria-label="Filtrer les projets">' + "".join(boutons) + "</nav>"
+
+    sections.append(f"""<section class="theme" id="projets">
+  <div class="conteneur">
+    <h2>{texte(titre_projets)}</h2>
+{barre_filtres(None)}
+{grille([carte_projet(p) for p in projets])}
+  </div>
+</section>""")
     for c in categories:
         cartes = [carte_projet(p) for p in projets if c["nom"] in categories_de(p)]
-        sections.append(f"""<section class="theme" id="{identifiant(c['nom'])}">
+        intro = f'\n    <p class="intro-axe">{texte(c["titre"])}</p>' if c.get("titre") else ""
+        sections.append(f"""<section class="theme" id="axe-{identifiant(c['nom'])}">
   <div class="conteneur">
-    <h2>{texte(c.get('titre', c['nom']))}</h2>
+    <h2>{texte(titre_projets)}</h2>
+{barre_filtres(c["nom"])}{intro}
 {grille(cartes)}
   </div>
 </section>""")
@@ -531,8 +553,6 @@ def construire_page(reglages, projets, pages):
     email = texte(ap.get("email", ""))
     pied = texte(NOM) + (f' · <a href="mailto:{email}">{email}</a>' if email else "")
 
-    # Pour souligner la bonne catégorie dans le menu quand une page de projet est ouverte
-    projet_vers_categorie = {ancre(p): "#" + identifiant(categories_de(p)[0]) for p in projets}
 
     return f"""<!DOCTYPE html>
 <!-- Page générée automatiquement par build.py à partir de Notion : ne pas modifier à la main. -->
@@ -575,11 +595,10 @@ def construire_page(reglages, projets, pages):
 
 <script>
   // Souligne l'élément du menu correspondant à la page ouverte
-  var PROJETS = {json.dumps(projet_vers_categorie)};
   function marquerMenu() {{
     var liens = document.querySelectorAll('.menu a');
     var actif = location.hash || '{page_depart}';
-    if (PROJETS[actif.slice(1)]) actif = PROJETS[actif.slice(1)];
+    if (/^#(projet-|axe-|tag-)/.test(actif)) actif = '#projets';
     liens.forEach(function (lien) {{
       lien.classList.toggle('actif', lien.getAttribute('href') === actif);
     }});

@@ -40,24 +40,36 @@ Nos territoires ont besoin d'ingénierie, de données et d'une compréhension tr
 """
 
 
-# ---------- Catégories de projets ----------
-# L'ordre ici est l'ordre du menu, après « A propos ».
-# - nom    : doit être écrit EXACTEMENT comme l'option de la colonne « Catégorie » dans Notion ;
-# - onglet : texte du menu (facultatif, sinon on reprend le nom) ;
-# - titre  : titre affiché en haut de la page (facultatif, sinon on reprend le nom).
+# ---------- Page « Projets » ----------
+# Tous les projets y sont affichés en cartes, dans l'ordre de la colonne « Ordre » de Notion.
+[projets]
+titre = "Projets"
+tous = "Tous"
+cv_dans_menu = true      # ajoute « CV » dans le menu (false pour l'enlever)
+
+
+# ---------- Axes (filtres de la page Projets) ----------
+# Chaque axe est un bouton de filtre en haut de la page Projets.
+# Un projet peut appartenir à plusieurs axes (colonne « Catégorie » de Notion, en sélection multiple).
+# - nom    : écrit EXACTEMENT comme l'option de la colonne « Catégorie » dans Notion ;
+# - onglet : texte du bouton (facultatif, sinon on reprend le nom) ;
+# - titre  : phrase affichée sous les filtres quand l'axe est sélectionné (facultatif).
 
 [[categorie]]
 nom = "Observer et diagnostiquer le territoire"
+onglet = "Observer et diagnostiquer"
 
 [[categorie]]
 nom = "Aménager durablement le territoire"
-onglet = "Aménager des espaces publics"
+onglet = "Aménager"
+titre = "Aménager des espaces publics favorables à l'équité et au bien-être des habitant·es"
 
 [[categorie]]
 nom = "Mesurer la transition"
 
 [[categorie]]
 nom = "Comprendre les usages et les expériences"
+onglet = "Comprendre les usages"
 
 
 # ---------- Étiquettes ----------
