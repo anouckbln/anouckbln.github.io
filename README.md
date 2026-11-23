@@ -34,6 +34,7 @@ Colonnes reconnues (le nom compte, pas l'ordre ; majuscules et accents ignorés)
 | **thèmes** | Sélection multiple | Non affichés (voir `afficher_themes` dans `site.toml`) |
 | **Catégorie** | Sélection multiple | Domaines du projet : les filtres de la page Projets (un projet peut en avoir plusieurs) |
 | **Images** | Texte | Noms des fichiers du dossier `images/`, séparés par des virgules |
+| **Mosaïque** | Texte | Photos de la mosaïque d'accueil qui mènent à ce projet (par exemple `mosaique-1-pelouse.jpg`) |
 | **Lien** | URL | Lien sous la description |
 | **Texte du lien** | Texte | Texte de ce lien (« Voir le projet » par défaut) |
 | **Collaboration, propriété intellectuelle** | Texte | Ligne « En collaboration avec … » sous la description |
@@ -48,7 +49,7 @@ Chaque étiquette est cliquable : elle ouvre une page qui regroupe tous les proj
 
 ## Organisation du site
 
-- **Accueil** : la mosaïque de 9 photos et sa légende (bloc `[accueil]` de `site.toml`). Les photos apparaissent une par une ; chacune peut mener à un projet (ligne `projet = "Nom du projet"`) ou, par défaut, à la page Projets. Les photos sont dans `images/`, nommées `mosaique-1-…` à `mosaique-9-…` : pour en changer une, remplace le fichier en gardant le nom, ou change le nom dans `site.toml`. Une photo carrée d'environ 700 px suffit.
+- **Accueil** : la mosaïque de 9 photos et sa légende (bloc `[accueil]` de `site.toml`). Les photos apparaissent une par une ; chacune mène au projet qui la cite dans la colonne **Mosaïque** de Notion, ou, par défaut, à la page Projets. Les photos sont dans `images/`, nommées `mosaique-1-…` à `mosaique-9-…` : pour en changer une, remplace le fichier en gardant le nom, ou change le nom dans `site.toml`. Une photo carrée d'environ 700 px suffit.
 - **Projets** : tous les projets en cartes, dans l'ordre de la colonne **Ordre**. En haut, des boutons filtrent par domaine : « Adaptation au climat », « Mobilités », etc. Les étiquettes (colonne **Tags**) indiquent les compétences et méthodes.
 - **A propos** : ta présentation, sur fond bleu.
 - **CV** : ouvre ton CV en PDF.

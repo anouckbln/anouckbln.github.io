@@ -47,6 +47,7 @@ COLONNES = {
     "ordre":         ["ordre"],
     "resume":        ["resume", "resume court", "accroche"],
     "annee":         ["annee", "date", "periode"],
+    "mosaique":      ["mosaique", "photo mosaique", "photos mosaique", "photo d'accueil"],
 }
 
 
@@ -470,11 +471,18 @@ def section_accueil(acc, projets):
 
     if mosaique:
         par_nom = {identifiant(p["titre"]): p for p in projets}
+        # Colonne « Mosaïque » de Notion : les photos de l'accueil qui mènent à ce projet
+        par_photo = {}
+        for p in projets:
+            for nom in noms_images(p.get("mosaique")):
+                par_photo[Path(nom).stem.lower()] = p
         tuiles = []
         for i, photo in enumerate(mosaique):
             src = texte(trouver_fichier(photo.get("image", ""), "une photo de la mosaïque"))
             nom_projet = photo.get("projet", "")
             p = par_nom.get(identifiant(nom_projet)) if nom_projet else None
+            if not nom_projet:
+                p = par_photo.get(Path(photo.get("image", "")).stem.lower())
             if nom_projet and not p:
                 print(f"Attention : le projet « {nom_projet} » de la mosaïque est introuvable, "
                       f"la photo mène à la page Projets.")
