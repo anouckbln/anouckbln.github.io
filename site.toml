@@ -96,16 +96,16 @@ cv_dans_menu = true      # ajoute « CV » dans le menu (false pour l'enlever)
 # - titre  : phrase affichée sous les filtres quand le domaine est sélectionné (facultatif).
 
 [[categorie]]
-nom = "Adaptation au climat"
+nom = "Climat urbain et santé"
 
 [[categorie]]
 nom = "Mobilités"
 
 [[categorie]]
-nom = "Espaces publics et santé"
+nom = "Espaces publics"
 
 [[categorie]]
-nom = "Données et politiques publiques"
+nom = Politiques publiques"
 
 
 # ---------- Étiquettes ----------
