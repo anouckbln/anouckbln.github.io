@@ -10,7 +10,7 @@
   --fond: #ffffff;        /* fond des pages de projets */
   --ligne: #d9deef;       /* traits de séparation légers */
   --police: "Open Sans", Arial, sans-serif;
-  --largeur: 1600px;      /* largeur maximale du contenu */
+  --largeur: none;        /* largeur maximale du contenu (none = toute la largeur de l'écran, ou par exemple 1600px) */
   --colonne: 300px;       /* largeur minimale d'un bloc projet (4 par ligne sur grand écran) */
 }
 
@@ -35,7 +35,7 @@ img { max-width: 100%; height: auto; display: block; }
 .conteneur {
   max-width: var(--largeur);
   margin: 0 auto;
-  padding: 0 clamp(16px, 3vw, 40px);   /* marges sur les côtés */
+  padding: 0 clamp(16px, 2vw, 32px);   /* marges sur les côtés */
 }
 
 /* ---------- En-tête : nom à gauche, trait bleu, menu à droite ---------- */
@@ -136,14 +136,13 @@ main:not(:has(.theme:target)) .theme:first-of-type {
   line-height: 1.6;
   text-align: justify;
   hyphens: auto;
-  max-width: 1200px;
   margin: 0 0 18px;
 }
 
 /* ---------- Grille de projets ---------- */
 .projets {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(var(--colonne), 100%), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--colonne), 100%), 1fr));
   gap: 40px 40px;
   align-items: start;
 }
