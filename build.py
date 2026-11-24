@@ -471,6 +471,26 @@ def page_projet(p, pages):
 </section>"""
 
 
+def bloc_inspirations(ap):
+    """Rubrique « Mes inspirations » : une liste de noms, avec un lien facultatif."""
+    elements = ap.get("inspirations", [])
+    if not elements:
+        return ""
+    lignes = []
+    for e in elements:
+        if isinstance(e, dict):
+            nom, lien = e.get("nom", ""), e.get("lien", "")
+        else:
+            nom, lien = str(e), ""
+        if not nom.strip():
+            continue
+        contenu = (f'<a href="{texte(lien)}" target="_blank">{texte(nom)}</a>' if lien else texte(nom))
+        lignes.append(f"          <li>{contenu}</li>")
+    titre = texte(ap.get("titre_inspirations", "Mes inspirations"))
+    return (f'      <div class="inspirations">\n        <h3>{titre}</h3>\n        <ul>\n'
+            + "\n".join(lignes) + "\n        </ul>\n      </div>")
+
+
 def section_a_propos(ap):
     """La page « A propos », sur fond bleu."""
     if not ap:
@@ -507,6 +527,7 @@ def section_a_propos(ap):
       <div class="texte-a-propos">
 {paragraphes(ap.get('texte', ''))}
       </div>
+{bloc_inspirations(ap)}
     </div>
 {bulles_thematiques(ap.get('thematiques', []))}
   </div>
