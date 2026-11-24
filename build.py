@@ -479,12 +479,17 @@ def bloc_inspirations(ap):
     lignes = []
     for e in elements:
         if isinstance(e, dict):
-            nom, lien = e.get("nom", ""), e.get("lien", "")
+            nom, lien, genre = e.get("nom", ""), e.get("lien", ""), e.get("type", "")
         else:
-            nom, lien = str(e), ""
+            nom, lien, genre = str(e), "", ""
         if not nom.strip():
             continue
-        contenu = (f'<a href="{texte(lien)}" target="_blank">{texte(nom)}</a>' if lien else texte(nom))
+        # Un titre d'ouvrage s'écrit en italique
+        nom_html = f"<cite>{texte(nom)}</cite>" if simplifier(genre) in ("ouvrage", "livre") else texte(nom)
+        contenu = (f'<a href="{texte(lien)}" target="_blank">{nom_html}</a>' if lien else nom_html)
+        if genre:
+            contenu += f' <span class="genre">{texte(genre)}</span>'
+
         lignes.append(f"          <li>{contenu}</li>")
     titre = texte(ap.get("titre_inspirations", "Mes inspirations"))
     return (f'      <div class="inspirations">\n        <h3>{titre}</h3>\n        <ul>\n'
@@ -515,21 +520,25 @@ def section_a_propos(ap):
         photo = f'<img class="photo" src="{src}" alt="{texte(NOM)}">'
 
     return f"""<section class="theme a-propos" id="a-propos">
-  <div class="conteneur colonnes-a-propos">
-    <div>
-      <h2>{texte(ap.get('titre', ap.get('onglet', 'A propos')))}</h2>
-      <div class="carte-visite">
-        {photo}
-        <div class="contact">
-          {(chr(10) + '          ').join(contact)}
+  <div class="bandeau-a-propos">
+    <div class="conteneur colonnes-a-propos">
+      <div class="colonne-contact">
+        <h2>{texte(ap.get('titre', ap.get('onglet', 'A propos')))}</h2>
+        <div class="carte-visite">
+          {photo}
+          <div class="contact">
+            {(chr(10) + '            ').join(contact)}
+          </div>
         </div>
+{bulles_thematiques(ap.get('thematiques', []))}
       </div>
       <div class="texte-a-propos">
 {paragraphes(ap.get('texte', ''))}
       </div>
-{bloc_inspirations(ap)}
     </div>
-{bulles_thematiques(ap.get('thematiques', []))}
+  </div>
+  <div class="conteneur">
+{bloc_inspirations(ap)}
   </div>
 </section>"""
 

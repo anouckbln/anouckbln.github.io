@@ -56,12 +56,14 @@ telephone = "+33 6 10 43 35 26"
 email = "anouck.blouin@yahoo.fr"
 linkedin = "https://www.linkedin.com/in/anouck-blouin-3b9436202/"
 cv = "documents/CV_Anouck_Blouin.pdf"
-# Rubrique « Mes inspirations », sous le texte. Une ligne par inspiration.
-# Pour ajouter un lien : { nom = "La rue commune", lien = "https://…" }
+# Rubrique « Mes inspirations », sous l'encadré bleu. Une ligne par inspiration.
+# - type = "ouvrage" met le titre en italique et ajoute la mention « ouvrage » ;
+# - pour ajouter un lien : { nom = "La rue commune", type = "ouvrage", lien = "https://…" }
 titre_inspirations = "Mes inspirations"
 inspirations = [
-  "Atelier Franck Boutté",
-  "La rue commune",
+  { nom = "Atelier Franck Boutté" },
+  { nom = "La rue commune", type = "ouvrage" },
+  { nom = "Manuel d'écologie urbaine", type = "ouvrage" },
 ]
 
 # Les bulles du schéma à droite du texte. Pour les réafficher, enlève les # devant les lignes.

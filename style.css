@@ -214,19 +214,23 @@ main:not(:has(.theme:target)) .theme:first-of-type {
 }
 
 /* ---------- Page « A propos » sur fond bleu ---------- */
-.a-propos {
+/* La section garde un fond blanc : seul le bandeau est bleu */
+.theme.a-propos { padding: 0 0 96px; }
+
+.bandeau-a-propos {
   background: var(--bleu);
   color: #fff;
-  min-height: 70vh;
+  padding: 56px 0 72px;
 }
 
-.a-propos a { color: #fff; }
+.bandeau-a-propos a { color: #fff; }
 
+/* Contact à gauche, texte à droite */
 .colonnes-a-propos {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
-  gap: 48px 80px;
-  align-items: center;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 40px 80px;
+  align-items: start;
 }
 
 .carte-visite {
@@ -253,6 +257,7 @@ main:not(:has(.theme:target)) .theme:first-of-type {
 .lien-cv { margin-top: 10px !important; }
 .lien-cv a { text-decoration: underline !important; text-underline-offset: 4px; }
 
+.texte-a-propos { padding-top: 12px; }
 .texte-a-propos p {
   font-size: var(--taille-lecture);
   line-height: 1.7;
@@ -260,12 +265,12 @@ main:not(:has(.theme:target)) .theme:first-of-type {
   margin: 0 0 1.1em;
 }
 
-.inspirations { margin-top: 36px; }
+.inspirations { margin-top: 56px; }
 .inspirations h3 {
-  font-size: var(--taille-lecture);
+  font-size: calc(var(--taille-titre-page) * .55);
   font-weight: 500;
   font-style: italic;
-  margin: 0 0 10px;
+  margin: 0 0 18px;
 }
 .inspirations ul {
   list-style: none;
@@ -276,11 +281,13 @@ main:not(:has(.theme:target)) .theme:first-of-type {
   gap: 8px;
 }
 .inspirations li {
-  font-size: var(--taille-texte);
-  padding: 4px 14px;
-  border: 1px solid rgba(255,255,255,.7);
+  font-size: var(--taille-lecture);
+  padding: 6px 16px;
+  border: 1px solid var(--bleu);
   border-radius: 999px;
 }
+.inspirations cite { font-style: italic; }
+.inspirations .genre { font-size: var(--taille-meta); color: var(--tag); margin-left: 4px; }
 .inspirations a { text-decoration: none; }
 .inspirations a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
