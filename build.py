@@ -480,13 +480,16 @@ def bloc_inspirations(ap):
     for e in elements:
         if isinstance(e, dict):
             nom, lien, genre = e.get("nom", ""), e.get("lien", ""), e.get("type", "")
+            auteur = e.get("auteur", "")
         else:
-            nom, lien, genre = str(e), "", ""
+            nom, lien, genre, auteur = str(e), "", "", ""
         if not nom.strip():
             continue
         # Un titre d'ouvrage s'écrit en italique
         nom_html = f"<cite>{texte(nom)}</cite>" if simplifier(genre) in ("ouvrage", "livre") else texte(nom)
         contenu = (f'<a href="{texte(lien)}" target="_blank">{nom_html}</a>' if lien else nom_html)
+        if auteur:
+            contenu += f', {texte(auteur)}'
         if genre:
             contenu += f' <span class="genre">{texte(genre)}</span>'
 

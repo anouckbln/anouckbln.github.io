@@ -58,11 +58,12 @@ linkedin = "https://www.linkedin.com/in/anouck-blouin-3b9436202/"
 cv = "documents/CV_Anouck_Blouin.pdf"
 # Rubrique « Mes inspirations », sous l'encadré bleu. Une ligne par inspiration.
 # - type = "ouvrage" met le titre en italique et ajoute la mention « ouvrage » ;
+# - auteur = "…" ajoute l'auteur après le titre ;
 # - pour ajouter un lien : { nom = "La rue commune", type = "ouvrage", lien = "https://…" }
 titre_inspirations = "Mes inspirations"
 inspirations = [
   { nom = "Atelier Franck Boutté" },
-  { nom = "La rue commune", type = "ouvrage" },
+  { nom = "La rue commune", auteur = "Atelier Franck Boutté", type = "ouvrage" },
   { nom = "Manuel d'écologie urbaine", type = "ouvrage" },
 ]
 
