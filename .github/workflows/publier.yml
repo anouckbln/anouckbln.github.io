@@ -1,4 +1,6 @@
 # Publie le site sur GitHub Pages à chaque modification de la branche main.
+# Il n'y a pas besoin de toucher à ce fichier.
+# Deux étapes séparées (générer, puis publier) : c'est plus fiable en cas de lenteur de GitHub.
 name: Publier le site
 
 on:
@@ -13,14 +15,11 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
-  publier:
+  generer:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deploiement.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -32,5 +31,13 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
+
+  publier:
+    needs: generer
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploiement.outputs.page_url }}
+    steps:
       - id: deploiement
         uses: actions/deploy-pages@v4

@@ -51,6 +51,7 @@ L'ordre des colonnes n'a pas d'importance, seul leur nom compte. Toute autre col
 | **Catégorie** | Domaines du projet : les filtres de la page Projets, séparés par des virgules |
 | **Images** | Noms des fichiers du dossier `images/`, séparés par des virgules. La première est celle de la carte |
 | **Légendes** | Une légende par image, dans le même ordre que la colonne Images, une par ligne (**Alt + Entrée** entre deux). Laisse une ligne vide pour une image sans légende |
+| **Carte interactive** | Adresse d'une carte en ligne, affichée en grand et manipulable sur la page du projet |
 | **Mosaïque** | Photos de la mosaïque d'accueil qui mènent à ce projet (par exemple `mosaique-1-pelouse.jpg`) |
 | **Lien** et **Texte du lien** | Un lien sur la page du projet (« Voir le projet » par défaut) |
 | **Brouillon** | `oui` : le projet est caché |

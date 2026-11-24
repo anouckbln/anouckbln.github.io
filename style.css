@@ -376,8 +376,8 @@ main:not(:has(.theme:target)) .theme:first-of-type {
 }
 
 .projets.une {
-  grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr));
-  gap: 48px 48px;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  gap: 48px 40px;
   margin-bottom: 88px;
 }
 
@@ -523,6 +523,13 @@ main:not(:has(.theme:target)) .theme:first-of-type {
 .detail-images figure:first-child:nth-last-child(odd) { grid-column: 1 / -1; }
 .detail-images img { width: auto; max-width: 100%; }   /* jamais agrandie, pour rester nette */
 .detail-images figure { margin: 0; }
+.detail-images .carte-interactive { grid-column: 1 / -1; }
+.carte-interactive iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--ligne);
+}
 .detail-images figcaption {
   font-size: var(--taille-meta);
   color: var(--bleu-doux);

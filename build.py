@@ -43,6 +43,7 @@ COLONNES = {
     "categorie":     ["categorie", "categories", "onglet"],
     "images":        ["images", "image"],
     "legendes":      ["legendes", "legende", "legendes des images"],
+    "carte":         ["carte interactive", "carte en ligne", "iframe"],
     "lien":          ["lien", "url"],
     "texte_lien":    ["texte du lien"],
     "brouillon":     ["brouillon", "masquer"],
@@ -443,13 +444,22 @@ def page_projet(p, pages):
     # Colonne « Légendes » : une ligne par image, dans le même ordre que la colonne Images
     legendes = p.get("legendes", "").replace("\r", "").split("\n")
     figures = []
+    # Avec une carte interactive, la première image ne sert que de vignette sur la carte du projet
+    debut = 1 if p.get("carte") else 0
     for n, i in enumerate(images_de(p)):
+        if n < debut:
+            continue
         legende = legendes[n].strip() if n < len(legendes) else ""
         alt = texte(legende or p["titre"])
         fig = f'<a href="{texte(i)}" target="_blank"><img src="{texte(i)}" alt="{alt}" loading="lazy"></a>'
         if legende:
             fig += f"<figcaption>{texte(legende)}</figcaption>"
         figures.append(f"        <figure>{fig}</figure>")
+    if p.get("carte"):
+        # Carte interactive (colonne « Carte interactive ») : affichée en premier, à droite
+        url = texte(p["carte"])
+        figures.insert(0, f'        <figure class="carte-interactive"><iframe src="{url}" title="Carte interactive : {texte(p["titre"])}" loading="lazy"></iframe>'
+                          f'<figcaption><a href="{url}" target="_blank">Ouvrir la carte en plein écran</a></figcaption></figure>')
     images = "\n".join(figures)
     st = sous_titre(p)
     return f"""<section class="theme page-projet" id="{ancre(p)}">
