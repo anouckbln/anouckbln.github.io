@@ -56,7 +56,8 @@ telephone = "+33 6 10 43 35 26"
 email = "anouck.blouin@yahoo.fr"
 linkedin = "https://www.linkedin.com/in/anouck-blouin-3b9436202/"
 cv = "documents/CV_Anouck_Blouin.pdf"
-# Les bulles du schéma à droite du texte (mets thematiques = [
+# Les bulles du schéma à droite du texte. Pour les réafficher, enlève les # devant les lignes.
+thematiques = [
   # "Formes urbaines",
   # "Marchabilité",
   # "Aménagements pour la mobilité douce",
