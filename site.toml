@@ -56,6 +56,14 @@ telephone = "+33 6 10 43 35 26"
 email = "anouck.blouin@yahoo.fr"
 linkedin = "https://www.linkedin.com/in/anouck-blouin-3b9436202/"
 cv = "documents/CV_Anouck_Blouin.pdf"
+# Rubrique « Engagement associatif », sous l'encadré bleu. Un bloc par association.
+titre_engagement = "Engagement associatif"
+engagement = [
+  { association = "UpFashionLab, Unipoly", role = "Cofondatrice", texte = "Création du pôle de réemploi textile du campus UNIL-EPFL : friperie étudiante et ateliers couture. Charte graphique, logo et affiches de recrutement." },
+  { association = "A Fond la Vie", role = "Directrice de camps", texte = "Direction de camps pour adultes : gestion d'équipes, du planning et du budget." },
+  { association = "Association des étudiant·es en génie civil, EPFL", role = "Cybercoach puis responsable communication du voyage de section", texte = "Animation des réseaux sociaux pour accueillir les étudiant·es de première année pendant la rentrée post-Covid (2020-2021), puis communication du voyage de section (2021-2022)." },
+]
+
 # Rubrique « Mes inspirations », sous l'encadré bleu (masquée : enlève les # pour la réafficher).
 # - type = "ouvrage" met le titre en italique et ajoute la mention « ouvrage » ;
 # - auteur = "…" ajoute l'auteur après le titre ;

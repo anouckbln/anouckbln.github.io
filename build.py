@@ -481,6 +481,22 @@ def page_projet(p, pages):
 </section>"""
 
 
+def bloc_engagement(ap):
+    """Rubrique « Engagement associatif » : association, rôle et texte court."""
+    elements = ap.get("engagement", [])
+    if not elements:
+        return ""
+    blocs = []
+    for e in elements:
+        nom = texte(e.get("association", ""))
+        role = f'<p class="role-asso">{texte(e["role"])}</p>' if e.get("role") else ""
+        desc = f'<p>{texte(e["texte"])}</p>' if e.get("texte") else ""
+        blocs.append(f'        <li><h4>{nom}</h4>{role}{desc}</li>')
+    titre = texte(ap.get("titre_engagement", "Engagement associatif"))
+    return (f'      <div class="engagement">\n        <h3>{titre}</h3>\n        <ul>\n'
+            + "\n".join(blocs) + "\n        </ul>\n      </div>")
+
+
 def bloc_inspirations(ap):
     """Rubrique « Mes inspirations » : une liste de noms, avec un lien facultatif."""
     elements = ap.get("inspirations", [])
@@ -551,6 +567,7 @@ def section_a_propos(ap):
     </div>
   </div>
   <div class="conteneur">
+{bloc_engagement(ap)}
 {bloc_inspirations(ap)}
   </div>
 </section>"""
