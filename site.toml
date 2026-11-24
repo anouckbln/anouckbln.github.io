@@ -41,7 +41,7 @@ mosaique = [
   { image = "images/mosaique-5-rue.jpg",         projet = "", description = "Un trottoir arboré bordé de commerces" },
   { image = "images/mosaique-6-structure.jpg",   projet = "", description = "Une structure métallique bleue sur un toit" },
   { image = "images/mosaique-7-formes-urbaines.jpg", projet = "", description = "Carte des trajectoires de durabilité des villes européennes" },
-  { image = "images/mosaique-8-atelier-marchabilite.jpg", projet = "", description = "Fiches de travail d'un atelier sur la marchabilité" },
+  { image = "images/mosaique-8-enfants-marche.jpg", projet = "", description = "Des enfants en gilets jaunes dans une rue piétonne" },
   { image = "images/mosaique-9-matrice-od.jpg", projet = "", description = "Carte des flux origine-destination du Grand Genève" },
 ]
 
