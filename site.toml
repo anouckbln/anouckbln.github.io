@@ -80,7 +80,6 @@ Nos territoires ont besoin d'ingénierie, de données et d'une compréhension tr
 # Tous les projets y sont affichés en cartes, dans l'ordre de la colonne « Ordre » de Notion.
 [projets]
 titre = "Projets"
-intro = "Observer et diagnostiquer le territoire, mesurer la transition, comprendre les usages et aménager durablement."
 tous = "Tous"
 titre_une = "À la une"          # rangée des projets cochés « À la une » dans Notion
 titre_autres = "Tous les projets"
